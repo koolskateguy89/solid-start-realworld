@@ -13,6 +13,8 @@
     "prettier"
   ],
   "rules": {
-    "@typescript-eslint/consistent-type-imports": "warn"
+    "@typescript-eslint/consistent-type-imports": "warn",
+    "@typescript-eslint/unbound-method": "off",
+    "@typescript-eslint/no-unsafe-assignment": "off"
   }
 }
