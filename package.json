@@ -11,6 +11,8 @@
   },
   "type": "module",
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.2",
+    "@types/jsonwebtoken": "^9.0.1",
     "@types/node": "^18.11.18",
     "@typescript-eslint/eslint-plugin": "^5.50.0",
     "@typescript-eslint/parser": "^5.50.0",
@@ -20,8 +22,8 @@
     "eslint-plugin-solid": "^0.9.4",
     "prettier": "^2.8.3",
     "prisma": "^4.9.0",
-    "solid-start-node": "^0.2.17",
-    "solid-start-vercel": "^0.2.17",
+    "solid-start-node": "^0.2.18",
+    "solid-start-vercel": "^0.2.18",
     "typescript": "^4.9.5",
     "vite": "^4.0.4"
   },
@@ -29,8 +31,10 @@
     "@prisma/client": "^4.9.0",
     "@solidjs/meta": "^0.28.2",
     "@solidjs/router": "^0.7.0",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.0",
     "solid-js": "^1.6.10",
-    "solid-start": "^0.2.17",
+    "solid-start": "^0.2.18",
     "undici": "5.16.0",
     "zod": "^3.20.2"
   },
