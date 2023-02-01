@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const serverScheme = z.object({
+export const serverSchema = z.object({
   NODE_ENV: z
     .enum(["development", "production", "test"])
     .default("development"),
@@ -9,8 +9,10 @@ export const serverScheme = z.object({
     .default("1")
     .transform((v) => parseInt(v)),
   DATABASE_URL: z.string(),
+
+  TOKEN_SECRET: z.string(),
 });
 
-export const clientScheme = z.object({
+export const clientSchema = z.object({
   MODE: z.enum(["development", "production", "test"]).default("development"),
 });
