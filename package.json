@@ -26,9 +26,6 @@
     "vite": "^4.0.4"
   },
   "dependencies": {
-    "@auth/core": "^0.3.0",
-    "@auth/solid-start": "^0.1.0",
-    "@next-auth/prisma-adapter": "^1.0.5",
     "@prisma/client": "^4.9.0",
     "@solidjs/meta": "^0.28.2",
     "@solidjs/router": "^0.7.0",
@@ -39,5 +36,8 @@
   },
   "engines": {
     "node": ">=16"
+  },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
   }
 }
