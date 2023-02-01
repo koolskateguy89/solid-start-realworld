@@ -3,10 +3,14 @@
   "parserOptions": {
     "project": "./tsconfig.json"
   },
-  "plugins": ["@typescript-eslint"],
+  "plugins": ["@typescript-eslint", "solid", "jsx-a11y"],
   "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/recommended-requiring-type-checking",
     "plugin:solid/typescript",
-    "plugin:@typescript-eslint/recommended"
+    "plugin:jsx-a11y/strict",
+    "prettier"
   ],
   "rules": {
     "@typescript-eslint/consistent-type-imports": "warn"
