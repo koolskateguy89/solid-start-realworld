@@ -1,0 +1,40 @@
+{
+  "name": "solid-start-realworld",
+  "scripts": {
+    "dev": "solid-start dev",
+    "build": "solid-start build && pnpm postbuild",
+    "start": "solid-start start",
+    "lint": "eslint --fix \"**/*.{ts,tsx,js,jsx}\"",
+    "push": "prisma db push",
+    "postinstall": "prisma generate",
+    "postbuild": "cp node_modules/.pnpm/**/**/prisma/*engine*.node .vercel/output/functions/render.func/ && cp prisma/schema.prisma .vercel/output/functions/render.func/ && cp node_modules/.pnpm/**/**/prisma/*engine*.node .vercel/output/functions/api.func/ && cp prisma/schema.prisma .vercel/output/functions/api.func/"
+  },
+  "type": "module",
+  "devDependencies": {
+    "@types/node": "^18.11.18",
+    "@typescript-eslint/eslint-plugin": "^5.50.0",
+    "@typescript-eslint/parser": "^5.50.0",
+    "eslint": "^8.33.0",
+    "eslint-plugin-solid": "^0.9.4",
+    "prisma": "^4.9.0",
+    "solid-start-node": "^0.2.17",
+    "solid-start-vercel": "^0.2.17",
+    "typescript": "^4.9.5",
+    "vite": "^4.0.4"
+  },
+  "dependencies": {
+    "@auth/core": "^0.3.0",
+    "@auth/solid-start": "^0.1.0",
+    "@next-auth/prisma-adapter": "^1.0.5",
+    "@prisma/client": "^4.9.0",
+    "@solidjs/meta": "^0.28.2",
+    "@solidjs/router": "^0.7.0",
+    "solid-js": "^1.6.10",
+    "solid-start": "^0.2.17",
+    "undici": "5.16.0",
+    "zod": "^3.20.2"
+  },
+  "engines": {
+    "node": ">=16"
+  }
+}
