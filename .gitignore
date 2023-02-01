@@ -35,3 +35,4 @@ yarn-error.log*
 .solid
 .output
 .vercel
+prisma/db.sqlite

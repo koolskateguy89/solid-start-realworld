@@ -14,46 +14,45 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Account {
-  id                String  @id @default(cuid())
-  userId            String
-  type              String
-  provider          String
-  providerAccountId String
-  refresh_token     String? // @db.Text
-  access_token      String? // @db.Text
-  expires_at        Int?
-  token_type        String?
-  scope             String?
-  id_token          String? // @db.Text
-  session_state     String?
-  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([provider, providerAccountId])
-}
-
-model Session {
-  id           String   @id @default(cuid())
-  sessionToken String   @unique
-  userId       String
-  expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?
-  accounts      Account[]
-  sessions      Session[]
+  username   String    @id
+  email      String
+  password   String
+  bio        String
+  image      String
+  articles   Article[]
+  comments   Comment[]
+  favourites Article[] @relation("Favorite")
+  following  User[]    @relation("Follow")
+  followers  User[]    @relation("Follow")
 }
 
-model VerificationToken {
-  identifier String
-  token      String   @unique
-  expires    DateTime
+model Article {
+  slug           String    @id
+  title          String
+  description    String
+  body           String // @db.Text
+  tagList        Tag[]
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  authorUsername String
+  author         User      @relation(fields: [authorUsername], references: [username])
+  comments       Comment[]
+  favorited      User[]    @relation("Favorite")
+}
 
-  @@unique([identifier, token])
+model Tag {
+  name     String    @id
+  articles Article[]
+}
+
+model Comment {
+  id             String   @id @default(cuid())
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  body           String // @db.Text
+  authorUsername String
+  articleSlug    String
+  author         User     @relation(fields: [authorUsername], references: [username])
+  article        Article  @relation(fields: [articleSlug], references: [slug])
 }
