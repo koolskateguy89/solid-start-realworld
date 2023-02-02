@@ -8,23 +8,19 @@
     "module": "esnext",
     "moduleResolution": "node",
     "resolveJsonModule": true,
-    "isolatedModules": true,
     "jsxImportSource": "solid-js",
     "jsx": "preserve",
     "incremental": true,
     "allowSyntheticDefaultImports": true,
     "noUncheckedIndexedAccess": true,
     "noErrorTruncation": true, // https://github.com/microsoft/vscode/issues/64566#issuecomment-590140308
+    "skipLibCheck": true,
+    "types": ["solid-start/env"],
     "baseUrl": "./",
     "paths": {
       "~/*": ["./src/*"]
     }
   },
-  "include": [
-    "solid-start/env",
-    "**/*.ts",
-    "**/*.tsx",
-  ],
   "exclude": [
     "node_modules",
   ],
