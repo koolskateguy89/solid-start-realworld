@@ -9,6 +9,7 @@
     "postinstall": "prisma generate",
     "postbuild": "cp node_modules/.pnpm/**/**/prisma/*engine*.node .vercel/output/functions/render.func/ && cp prisma/schema.prisma .vercel/output/functions/render.func/ && cp node_modules/.pnpm/**/**/prisma/*engine*.node .vercel/output/functions/api.func/ && cp prisma/schema.prisma .vercel/output/functions/api.func/"
   },
+  "type": "module",
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",
     "@types/jsonwebtoken": "^9.0.1",
