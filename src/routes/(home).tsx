@@ -11,7 +11,7 @@ import {
 import type { MultipleArticles } from "~/types/api";
 import Banner from "~/components/home/Banner";
 import Sidebar from "~/components/home/Sidebar";
-import Articles from "~/components/home/Articles";
+import Articles from "~/components/article/Articles";
 
 export function routeData() {
   const [searchParams] = useSearchParams<{ tag?: string }>();
