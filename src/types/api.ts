@@ -1,5 +1,9 @@
 // https://realworld-docs.netlify.app/docs/specs/backend-specs/api-response-format/
 
+export interface ErrorResponse {
+  errors: unknown;
+}
+
 export type User = {
   email: string;
   token: string;
@@ -45,6 +49,6 @@ export type MultipleComments = {
   comments: Comment[];
 };
 
-export type TagList = {
+export type ListOfTags = {
   tags: string[];
 };
