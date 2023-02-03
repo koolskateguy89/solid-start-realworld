@@ -1,4 +1,4 @@
-import type { VoidComponent } from "solid-js";
+import { type VoidComponent, For } from "solid-js";
 import { A } from "solid-start";
 
 import type { Article } from "~/types/api";
@@ -35,9 +35,15 @@ const ArticlePreview: VoidComponent<ArticlePreviewProps> = (props) => {
         </button>
       </div>
       <A href={`/article/${props.slug}`} class="preview-link">
+        {/* TODO: probably want to limit length */}
         <h1>{props.title}</h1>
         <p>{props.description}</p>
         <span>Read more...</span>
+        <ul class="tag-list">
+          <For each={props.tagList}>
+            {(tag) => <li class="tag-default tag-pill tag-outline">{tag}</li>}
+          </For>
+        </ul>
       </A>
     </article>
   );
