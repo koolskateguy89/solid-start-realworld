@@ -16,16 +16,16 @@ datasource db {
 }
 
 model User {
-  username   String    @id
-  email      String    @unique
-  password   String
-  bio        String
-  image      String
-  articles   Article[]
-  comments   Comment[]
-  favourites Article[] @relation("Favorite")
-  following  User[]    @relation("Follow")
-  followers  User[]    @relation("Follow")
+  username  String    @id
+  email     String    @unique
+  password  String
+  bio       String
+  image     String
+  articles  Article[]
+  comments  Comment[]
+  favorites Article[] @relation("Favorite")
+  following User[]    @relation("Follow")
+  followers User[]    @relation("Follow")
 }
 
 model Article {
