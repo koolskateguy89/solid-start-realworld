@@ -16,7 +16,9 @@ import Articles from "~/components/article/Articles";
 export function routeData({ location }: RouteDataArgs) {
   return createRouteData(
     async (tag, { fetch }) => {
-      const url = tag ? `/api/articles?tag=${tag}` : "/api/articles";
+      const url = tag
+        ? `/api/articles?tag=${encodeURIComponent(tag)}`
+        : "/api/articles";
 
       const res = await fetch(url, {});
       const multipleArticles = (await res.json()) as MultipleArticles;

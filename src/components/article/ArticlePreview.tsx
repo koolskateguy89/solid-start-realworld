@@ -14,7 +14,7 @@ const ArticlePreview: VoidComponent<ArticlePreviewProps> = (props) => {
   return (
     <article class="article-preview">
       <div class="article-meta">
-        <A href={`/profile/${props.author.username}`}>
+        <A href={`/profile/${encodeURIComponent(props.author.username)}`}>
           <img src={props.author.image} alt={props.author.username} />
         </A>
         <div class="info">
@@ -34,7 +34,10 @@ const ArticlePreview: VoidComponent<ArticlePreviewProps> = (props) => {
           <i class="ion-heart" /> {props.favoritesCount}
         </button>
       </div>
-      <A href={`/article/${props.slug}`} class="preview-link">
+      <A
+        href={`/article/${encodeURIComponent(props.slug)}`}
+        class="preview-link"
+      >
         {/* TODO: probably want to limit length */}
         <h1>{props.title}</h1>
         <p>{props.description}</p>

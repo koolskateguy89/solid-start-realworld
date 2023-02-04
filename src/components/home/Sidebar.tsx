@@ -20,7 +20,10 @@ const Sidebar: VoidComponent = () => {
         <div class="tag-list">
           <For each={tags()}>
             {(tag) => (
-              <A href={`?tag=${tag}`} class="tag-pill tag-default">
+              <A
+                href={`?tag=${encodeURIComponent(tag)}`}
+                class="tag-pill tag-default"
+              >
                 {tag}
               </A>
             )}
