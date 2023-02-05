@@ -89,10 +89,10 @@ export async function getUserProfile(request: Request) {
   return result.data;
 }
 
-// pretty sure this is only server side
-// but there are client-side actions that require a user
-// so need to figure out how to handle that
-// can just check useSession
+/**
+ * @note only use server-side on pages
+ * @see `src/server/lib/auth.ts` for API route version
+ */
 export async function requireUser(
   request: Request,
   redirectTo: string = new URL(request.url).pathname
@@ -105,21 +105,6 @@ export async function requireUser(
   if (!result.success) {
     const searchParams = new URLSearchParams({ redirectTo });
     throw redirect(`/login?${searchParams}`);
-  }
-
-  return result.data;
-}
-
-export async function requireUserApi(request: Request) {
-  const session = await getUserSession(request);
-  const userProfile = session.get("userProfile");
-
-  const result = sessionProfileSchema.safeParse(userProfile);
-
-  if (!result.success) {
-    throw json({ errors: "Unauthorized" } satisfies ErrorResponse, {
-      status: 401,
-    });
   }
 
   return result.data;
