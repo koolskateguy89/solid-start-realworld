@@ -8,6 +8,7 @@ import { useSession } from "~/lib/session";
 
 export type CommentProps = Pick<CommentType, "body" | "createdAt" | "id"> & {
   author: Pick<CommentType["author"], "username" | "image">;
+  onDelete: (id: number) => void;
 };
 
 const Comment: VoidComponent<CommentProps> = (props) => {
@@ -17,12 +18,6 @@ const Comment: VoidComponent<CommentProps> = (props) => {
 
   const postedAt = () => formattedDate(props.createdAt);
 
-  const deleteComment = () => {
-    // TODO: action
-    console.log("delete comment");
-  };
-
-  // TODO:
   return (
     <div class="card">
       <div class="card-block">
@@ -48,9 +43,10 @@ const Comment: VoidComponent<CommentProps> = (props) => {
         </A>
         <span class="date-posted">{postedAt()}</span>
         <Show when={canModify()}>
-          <button type="button" onClick={deleteComment} class="mod-options">
-            <i class="ion-trash-a" />
-          </button>
+          <span class="mod-options">
+            {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
+            <i onClick={() => props.onDelete(props.id)} class="ion-trash-a" />
+          </span>
         </Show>
       </div>
     </div>
