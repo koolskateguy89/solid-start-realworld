@@ -1,30 +1,78 @@
 import jwt from "jsonwebtoken";
 
+import type { Profile } from "~/types/api";
 import { serverEnv } from "~/env/server";
+
+export type SessionUser = Omit<Profile, "following">;
+
+export type Session = {
+  user: SessionUser;
+};
+
+/*
+auth strategy:
+
+- store a subset of `User` in the token payload
+- store the token in localStorage
+- use `jwt.decode()` to decode the token on the client-side
+- use `jwt.verify()` to verify the token on the server-side
+
+- [server] `generateToken(User)` will use the entire `User` object as the payload
+- [server] `getSession(Request)` should return the entire `User` object, or `null` if the token is invalid/missing
+  - the token should be in the `Authorization` header
+*/
 
 /**
  * Generates a JWT token that is to be used as an authentication token.
- * - payload contains username
+ * - payload contains username, image and bio
  * - expires in a week from the date it was generated
  *
- * @param username
+ * @param user
  * @returns JWT authentication token
- * @note server-side only
  */
-export function generateToken(username: string): string {
-  return jwt.sign({ username }, serverEnv.TOKEN_SECRET, { expiresIn: "7d" });
+export function generateToken<TUser extends SessionUser>(user: TUser): string {
+  return jwt.sign(
+    {
+      user: {
+        username: user.username,
+        image: user.image,
+        bio: user.bio,
+      },
+    } satisfies Session,
+    serverEnv.TOKEN_SECRET,
+    { expiresIn: "7d" }
+  );
+}
+
+export function getToken(request: Request): string | null {
+  return request.headers.get("Authorization")?.split(" ")[1] ?? null;
 }
 
 /**
- * Verifies the provided `token` and returns the username contained in the token's payload.
- * Returns `null` if the token cannot be verified.
+ * Gets the session stored in the token in the `Authorization` header.
  *
- * @param token
- * @returns The username contained in the token payload
- * @note server-side only
- * @note this function does not verify the token's signature
+ * @returns The session contained in the token payload, or `null` if the token is invalid/missing
  */
-export function getUsernameFromToken(token: string): string | null {
-  const decoded = jwt.decode(token) as jwt.JwtPayload | null;
-  return (decoded?.username as string) ?? null;
+export function getSession(request: Request): Session | null {
+  const token = getToken(request);
+  if (!token) return null;
+
+  try {
+    const decoded = jwt.verify(
+      token,
+      serverEnv.TOKEN_SECRET
+    ) as jwt.JwtPayload | null;
+
+    if (!decoded) return null;
+
+    return {
+      user: {
+        username: decoded.username as string,
+        image: decoded.image as string,
+        bio: decoded.bio as string,
+      },
+    };
+  } catch (err) {
+    return null;
+  }
 }
