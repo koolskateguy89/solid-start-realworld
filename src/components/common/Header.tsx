@@ -36,21 +36,40 @@ const Header: VoidComponent = () => {
                 </li>
               </>
             }
+            keyed
           >
-            <li class="nav-item">
-              <A href="/editor" class="nav-link" activeClass="active">
-                {" "}
-                <i class="ion-compose" />
-                &nbsp;New Article{" "}
-              </A>
-            </li>
-            <li class="nav-item">
-              <A href="/settings" class="nav-link" activeClass="active">
-                {" "}
-                <i class="ion-gear-a" />
-                &nbsp;Settings{" "}
-              </A>
-            </li>
+            {(user) => (
+              <>
+                <li class="nav-item">
+                  <A href="/editor" class="nav-link" activeClass="active">
+                    {" "}
+                    <i class="ion-compose" />
+                    &nbsp;New Article{" "}
+                  </A>
+                </li>
+                <li class="nav-item">
+                  <A href="/settings" class="nav-link" activeClass="active">
+                    {" "}
+                    <i class="ion-gear-a" />
+                    &nbsp;Settings{" "}
+                  </A>
+                </li>
+                <li class="nav-item">
+                  <A
+                    href={`/profile/${encodeURIComponent(user.username)}`}
+                    class="nav-link"
+                    end
+                  >
+                    <img
+                      src={user.image}
+                      alt={user.username}
+                      class="user-pic"
+                    />
+                    {user.username}
+                  </A>
+                </li>
+              </>
+            )}
           </Show>
         </ul>
       </div>
