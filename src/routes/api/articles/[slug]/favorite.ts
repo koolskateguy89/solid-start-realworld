@@ -41,7 +41,7 @@ export async function POST({ params, request }: APIEvent) {
       { status: 404 }
     );
 
-  const result: Article = {
+  return json<Article>({
     slug: article.slug,
     title: article.title,
     description: article.description,
@@ -52,9 +52,7 @@ export async function POST({ params, request }: APIEvent) {
     favorited: true,
     favoritesCount: article._count.favorited,
     author: userToProfile(article.author),
-  };
-
-  return json(result);
+  });
 }
 
 // https://realworld-docs.netlify.app/docs/specs/backend-specs/endpoints#unfavorite-article
@@ -93,7 +91,7 @@ export async function DELETE({ params, request }: APIEvent) {
       { status: 404 }
     );
 
-  const result: Article = {
+  return json<Article>({
     slug: article.slug,
     title: article.title,
     description: article.description,
@@ -104,7 +102,5 @@ export async function DELETE({ params, request }: APIEvent) {
     favorited: false,
     favoritesCount: article._count.favorited,
     author: userToProfile(article.author),
-  };
-
-  return json(result);
+  });
 }

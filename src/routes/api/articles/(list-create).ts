@@ -77,12 +77,10 @@ export async function GET({ request }: APIEvent) {
     select: selectDbArticle(username),
   });
 
-  const result: MultipleArticles = {
+  return json<MultipleArticles>({
     articles: articles.map(toApiArticle),
     articlesCount: articles.length,
-  };
-
-  return json(result);
+  });
 }
 
 // https://realworld-docs.netlify.app/docs/specs/backend-specs/endpoints#create-article

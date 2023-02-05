@@ -55,10 +55,8 @@ export async function GET({ request }: APIEvent) {
     select: selectDbArticle(user.username),
   });
 
-  const result: MultipleArticles = {
+  return json<MultipleArticles>({
     articles: articles.map(toApiArticle),
     articlesCount: 0,
-  };
-
-  return json(result);
+  });
 }

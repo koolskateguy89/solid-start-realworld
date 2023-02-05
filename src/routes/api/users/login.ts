@@ -49,15 +49,11 @@ export async function POST({ request }: APIEvent) {
   if (!isCorrect)
     return json<SigninError>({ errors: "invalid" }, { status: 401 });
 
-  const token = generateToken(dbUser);
-
-  const result: User = {
+  return json<User>({
     email: dbUser.email,
     username: dbUser.username,
     bio: dbUser.bio,
     image: dbUser.image,
-    token,
-  };
-
-  return json(result);
+    token: generateToken(dbUser),
+  });
 }

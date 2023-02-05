@@ -22,9 +22,7 @@ export async function GET({ request }: APIEvent) {
     },
   });
 
-  const result: User = { ...user, token: generateToken(user) };
-
-  return json(result);
+  return json<User>({ ...user, token: generateToken(user) });
 }
 
 // https://realworld-docs.netlify.app/docs/specs/backend-specs/endpoints#update-user
@@ -62,7 +60,5 @@ export async function POST({ request }: APIEvent) {
     },
   });
 
-  const result: User = { ...user, token: generateToken(user) };
-
-  return json(result);
+  return json<User>({ ...user, token: generateToken(user) });
 }

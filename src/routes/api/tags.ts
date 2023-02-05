@@ -7,9 +7,7 @@ import type { ListOfTags } from "~/types/api";
 export async function GET() {
   const tags = await prisma.tag.findMany();
 
-  const result: ListOfTags = {
+  return json<ListOfTags>({
     tags: tags.map((tag) => tag.name),
-  };
-
-  return json(result);
+  });
 }

@@ -53,9 +53,8 @@ export async function POST({ request }: APIEvent) {
     },
   });
 
-  const token = generateToken(dbUser);
-
-  const result: User = { ...dbUser, token };
-
-  return json(result);
+  return json<User>({
+    ...dbUser,
+    token: generateToken(dbUser),
+  });
 }

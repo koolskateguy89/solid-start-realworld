@@ -33,12 +33,10 @@ export async function POST({ params, request }: APIEvent) {
     return json({ errors: "User not found" }, { status: 404 });
   }
 
-  const profile: Profile = {
+  return json<Profile>({
     ...user,
     following: true,
-  };
-
-  return json(profile);
+  });
 }
 
 // https://realworld-docs.netlify.app/docs/specs/backend-specs/endpoints#unfollow-user
@@ -70,10 +68,8 @@ export async function DELETE({ params, request }: APIEvent) {
     return json({ errors: "User not found" }, { status: 404 });
   }
 
-  const profile: Profile = {
+  return json<Profile>({
     ...user,
     following: false,
-  };
-
-  return json(profile);
+  });
 }
