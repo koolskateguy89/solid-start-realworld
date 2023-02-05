@@ -1,4 +1,10 @@
-import { type VoidComponent, Show, Suspense } from "solid-js";
+import {
+  type VoidComponent,
+  createEffect,
+  createSignal,
+  Show,
+  Suspense,
+} from "solid-js";
 import {
   type RouteDataArgs,
   createRouteData,
@@ -61,7 +67,13 @@ const HomePage: VoidComponent = () => {
   const tag = () => searchParams.tag;
 
   const location = useLocation();
-  const feed = () => (location.hash.substring(1) || "global") as Feed;
+  const [feed, setFeed] = createSignal<Feed>("global");
+
+  // can't derive feed from location.hash because hash isn't
+  // set on initial render
+  createEffect(() => {
+    setFeed((location.hash.substring(1) || "global") as Feed);
+  });
 
   return (
     <main class="home-page">

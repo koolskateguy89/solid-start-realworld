@@ -13,8 +13,8 @@ import {
   Link,
 } from "solid-start";
 
-import Footer from "./components/common/Footer";
-import Header from "./components/common/Header";
+import Footer from "~/components/common/Footer";
+import Header from "~/components/common/Header";
 
 // https://realworld-docs.netlify.app/docs/specs/frontend-specs/styles
 
