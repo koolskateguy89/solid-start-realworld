@@ -1,35 +1,52 @@
-import { type VoidComponent, createSignal, Show, Suspense } from "solid-js";
+import { type VoidComponent, Show, Suspense } from "solid-js";
 import {
   type RouteDataArgs,
   createRouteData,
   useRouteData,
   useSearchParams,
+  useLocation,
   Title,
   A,
 } from "solid-start";
 
 import type { MultipleArticles } from "~/types/api";
+import { useSession } from "~/lib/session";
 import Banner from "~/components/home/Banner";
+import ArticlePreviews from "~/components/article/ArticlePreviews";
 import Sidebar from "~/components/home/Sidebar";
-import Articles from "~/components/article/Articles";
 
-export function routeData({ location }: RouteDataArgs) {
+type Feed = "global" | "your";
+
+export function routeData({ location, navigate }: RouteDataArgs) {
   return createRouteData(
-    async (tag, { fetch }) => {
-      const url = tag
-        ? `/api/articles?tag=${encodeURIComponent(tag)}`
-        : "/api/articles";
+    async ([hash, tag, navigate], { fetch }) => {
+      const feed = hash.substring(1) as Feed;
+
+      console.log("routeData.feed = ", feed);
+
+      let url: string;
+      if (feed === "global") {
+        url = tag
+          ? `/api/articles?tag=${encodeURIComponent(tag)}`
+          : "/api/articles";
+      } else if (feed === "your") {
+        url = "/api/articles/feed";
+      } else {
+        return navigate("/");
+      }
 
       const res = await fetch(url, {});
       const multipleArticles = (await res.json()) as MultipleArticles;
 
-      // TODO: global feed vs your feed, could use query param, idrk
-
       return multipleArticles.articles;
     },
     {
-      // using default "" because it won't run if tag is undefined
-      key: () => location.query.tag ?? "",
+      key: () =>
+        [
+          (location.hash || "#global") as `#${Feed}`,
+          location.query.tag,
+          navigate,
+        ] as const,
     }
   );
 }
@@ -37,20 +54,18 @@ export function routeData({ location }: RouteDataArgs) {
 const HomePage: VoidComponent = () => {
   const articles = useRouteData<typeof routeData>();
 
-  // TODO: impl feed toggle thingy
+  const session = useSession();
+  const user = () => session()?.user;
 
   const [searchParams] = useSearchParams<{ tag?: string }>();
-
   const tag = () => searchParams.tag;
 
-  // TODO: only global if not logged in? or empty?
-  const [feed, setFeed] = createSignal<"global" | "your">("global");
+  const location = useLocation();
+  const feed = () => (location.hash.substring(1) || "global") as Feed;
 
   return (
     <main class="home-page">
       <Title>Home — Conduit</Title>
-
-      <pre>searchParams = {JSON.stringify(searchParams)}</pre>
       <Banner />
 
       <div class="container page">
@@ -58,20 +73,20 @@ const HomePage: VoidComponent = () => {
           <div class="col-md-9">
             <div class="feed-toggle">
               <ul class="nav nav-pills outline-active">
-                <li class="nav-item">
-                  {/* TODO? class disabled when not signed in */}
-                  <A
-                    href="/"
-                    activeClass=""
-                    classList={{
-                      "nav-link": true,
-                      active: !tag() && feed() === "your",
-                    }}
-                    onClick={() => setFeed("your")}
-                  >
-                    Your Feed
-                  </A>
-                </li>
+                <Show when={user()}>
+                  <li class="nav-item">
+                    <A
+                      href="/#your"
+                      activeClass=""
+                      classList={{
+                        "nav-link": true,
+                        active: !tag() && feed() === "your",
+                      }}
+                    >
+                      Your Feed
+                    </A>
+                  </li>
+                </Show>
                 <li class="nav-item">
                   <A
                     href="/"
@@ -80,7 +95,6 @@ const HomePage: VoidComponent = () => {
                       "nav-link": true,
                       active: !tag() && feed() === "global",
                     }}
-                    onClick={() => setFeed("global")}
                   >
                     Global Feed
                   </A>
@@ -100,7 +114,7 @@ const HomePage: VoidComponent = () => {
                 when={(articles() ?? []).length > 0}
                 fallback="Nothing to see here..."
               >
-                <Articles articles={articles()!} />
+                <ArticlePreviews articles={articles()!} />
               </Show>
             </Suspense>
           </div>
