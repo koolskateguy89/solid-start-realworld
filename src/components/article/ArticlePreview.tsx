@@ -2,14 +2,12 @@ import { type VoidComponent, For } from "solid-js";
 import { A } from "solid-start";
 
 import type { Article } from "~/types/api";
+import { formattedDate } from "~/lib/utils";
 
 export type ArticlePreviewProps = Article;
 
 const ArticlePreview: VoidComponent<ArticlePreviewProps> = (props) => {
-  const createdAt = () =>
-    new Date(props.createdAt).toLocaleDateString("en-GB", {
-      dateStyle: "long",
-    });
+  const createdAt = () => formattedDate(props.createdAt);
 
   return (
     <article class="article-preview">
