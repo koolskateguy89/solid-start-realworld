@@ -4,7 +4,7 @@ import { z } from "zod";
 import { getUser, requireUser } from "~/server/lib/auth";
 import { prisma } from "~/server/db/client";
 import { selectDbComment, toApiComment } from "~/server/transform/comment";
-import type { ErrorResponse } from "~/types/api";
+import type { ErrorResponse, MultipleComments } from "~/types/api";
 
 // https://realworld-docs.netlify.app/docs/specs/backend-specs/endpoints#get-comments-from-an-article
 export async function GET({ params, request }: APIEvent) {
@@ -30,7 +30,9 @@ export async function GET({ params, request }: APIEvent) {
       { status: 404 }
     );
 
-  return json(article.comments.map(toApiComment));
+  return json<MultipleComments>({
+    comments: article.comments.map(toApiComment),
+  });
 }
 
 // https://realworld-docs.netlify.app/docs/specs/backend-specs/endpoints#add-comments-to-an-article
