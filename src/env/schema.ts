@@ -11,6 +11,7 @@ export const serverSchema = z.object({
   DATABASE_URL: z.string(),
 
   TOKEN_SECRET: z.string(),
+  SESSION_SECRET: z.string(),
 });
 
 export const clientSchema = z.object({
