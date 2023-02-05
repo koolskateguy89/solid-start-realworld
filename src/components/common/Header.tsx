@@ -1,8 +1,12 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
-import type { VoidComponent } from "solid-js";
+import { type VoidComponent, Show } from "solid-js";
 import { A } from "solid-start";
 
+import { useSession } from "~/lib/session";
+
 const Header: VoidComponent = () => {
+  const session = useSession();
+  const user = () => session()?.user;
+
   return (
     <nav class="navbar navbar-light">
       <div class="container">
@@ -10,38 +14,44 @@ const Header: VoidComponent = () => {
           conduit
         </A>
         <ul class="nav navbar-nav pull-xs-right">
-          {/* TODO: think the first 3 are only meant to show when signed in */}
-
           <li class="nav-item">
             {/* TODO: Add "active" class when you're on that page" */}
-            <A class="nav-link active" href="/">
+            <A href="/" class="nav-link" activeClass="active" end>
               Home
             </A>
           </li>
-          <li class="nav-item">
-            <A class="nav-link" href="/editor">
-              {" "}
-              <i class="ion-compose" />
-              &nbsp;New Article{" "}
-            </A>
-          </li>
-          <li class="nav-item">
-            <A class="nav-link" href="/settings">
-              {" "}
-              <i class="ion-gear-a" />
-              &nbsp;Settings{" "}
-            </A>
-          </li>
-          <li class="nav-item">
-            <A class="nav-link" href="/login">
-              Sign in
-            </A>
-          </li>
-          <li class="nav-item">
-            <A class="nav-link" href="/register">
-              Sign up
-            </A>
-          </li>
+          <Show
+            when={user()}
+            fallback={
+              <>
+                <li class="nav-item">
+                  <A href="/login" class="nav-link" activeClass="active">
+                    Sign in
+                  </A>
+                </li>
+                <li class="nav-item">
+                  <A href="/register" class="nav-link" activeClass="active">
+                    Sign up
+                  </A>
+                </li>
+              </>
+            }
+          >
+            <li class="nav-item">
+              <A href="/editor" class="nav-link" activeClass="active">
+                {" "}
+                <i class="ion-compose" />
+                &nbsp;New Article{" "}
+              </A>
+            </li>
+            <li class="nav-item">
+              <A href="/settings" class="nav-link" activeClass="active">
+                {" "}
+                <i class="ion-gear-a" />
+                &nbsp;Settings{" "}
+              </A>
+            </li>
+          </Show>
         </ul>
       </div>
     </nav>
