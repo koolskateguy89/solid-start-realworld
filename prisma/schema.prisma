@@ -37,7 +37,7 @@ model Article {
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
   authorUsername String
-  author         User      @relation(fields: [authorUsername], references: [username])
+  author         User      @relation(fields: [authorUsername], references: [username], onDelete: Cascade, onUpdate: Cascade)
   comments       Comment[]
   favorited      User[]    @relation("Favorite")
 }
@@ -54,6 +54,6 @@ model Comment {
   body           String // @db.Text
   authorUsername String
   articleSlug    String
-  author         User     @relation(fields: [authorUsername], references: [username])
-  article        Article  @relation(fields: [articleSlug], references: [slug])
+  author         User     @relation(fields: [authorUsername], references: [username], onDelete: Cascade, onUpdate: Cascade)
+  article        Article  @relation(fields: [articleSlug], references: [slug], onDelete: Cascade)
 }
