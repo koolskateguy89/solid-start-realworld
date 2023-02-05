@@ -66,11 +66,7 @@ export function getSession(request: Request): Session | null {
     if (!decoded) return null;
 
     return {
-      user: {
-        username: decoded.username as string,
-        image: decoded.image as string,
-        bio: decoded.bio as string,
-      },
+      user: decoded.user as SessionUser,
     };
   } catch (err) {
     return null;
