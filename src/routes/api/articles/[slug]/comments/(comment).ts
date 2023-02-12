@@ -4,7 +4,7 @@ import { z } from "zod";
 import { getUser, requireUser } from "~/server/lib/auth";
 import { prisma } from "~/server/db/client";
 import { selectDbComment, toApiComment } from "~/server/transform/comment";
-import type { ErrorResponse, MultipleComments } from "~/types/api";
+import type { ErrorResponse, MultipleComments, Comment } from "~/types/api";
 
 // https://realworld-docs.netlify.app/docs/specs/backend-specs/endpoints#get-comments-from-an-article
 export async function GET({ params, request }: APIEvent) {
@@ -20,6 +20,10 @@ export async function GET({ params, request }: APIEvent) {
     select: {
       comments: {
         select: selectDbComment(username),
+        orderBy: {
+          // sort by newest first
+          createdAt: "desc",
+        },
       },
     },
   });
@@ -36,12 +40,66 @@ export async function GET({ params, request }: APIEvent) {
 }
 
 // https://realworld-docs.netlify.app/docs/specs/backend-specs/endpoints#add-comments-to-an-article
-// TODO: schema
+const createCommentSchema = z.object({
+  comment: z.object({
+    body: z.string().trim().min(1),
+  }),
+});
+
+export type CreateCommentBody = z.infer<typeof createCommentSchema>;
 
 export async function POST({ params, request }: APIEvent) {
   const user = await requireUser(request);
 
-  // TODO
+  const { slug } = params;
 
-  return json<ErrorResponse>({ errors: "Not implemented" }, { status: 501 });
+  const isValid = createCommentSchema.safeParse(await request.json());
+
+  if (!isValid.success)
+    return json<ErrorResponse>(
+      { errors: isValid.error.issues },
+      { status: 422 }
+    );
+
+  const { body } = isValid.data.comment;
+
+  const comment = await prisma.comment.create({
+    data: {
+      body,
+      author: {
+        connect: {
+          username: user.username,
+        },
+      },
+      article: {
+        connect: {
+          slug,
+        },
+      },
+    },
+    select: {
+      id: true,
+      body: true,
+      createdAt: true,
+      updatedAt: true,
+      author: {
+        select: {
+          username: true,
+          bio: true,
+          image: true,
+        },
+      },
+    },
+  });
+
+  return json<Comment>({
+    id: comment.id,
+    createdAt: comment.createdAt.toISOString(),
+    updatedAt: comment.updatedAt.toISOString(),
+    body: comment.body,
+    author: {
+      ...comment.author,
+      following: false,
+    },
+  });
 }
