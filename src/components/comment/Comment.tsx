@@ -1,6 +1,6 @@
 import type { VoidComponent } from "solid-js";
 import { Show } from "solid-js";
-import { A } from "solid-start";
+import { createRouteAction, useParams, A } from "solid-start";
 
 import type { Comment as CommentType } from "~/types/api";
 import { formattedDate } from "~/lib/utils";
@@ -8,7 +8,6 @@ import { useSession } from "~/lib/session";
 
 export type CommentProps = Pick<CommentType, "body" | "createdAt" | "id"> & {
   author: Pick<CommentType["author"], "username" | "image">;
-  onDelete: (id: number) => void;
 };
 
 const Comment: VoidComponent<CommentProps> = (props) => {
@@ -17,6 +16,19 @@ const Comment: VoidComponent<CommentProps> = (props) => {
   const canModify = () => session()?.user?.username === props.author.username;
 
   const postedAt = () => formattedDate(props.createdAt);
+
+  const params = useParams<{ slug: string }>();
+
+  const [deleting, deleteAction] = createRouteAction(
+    async ({ slug, id }: { slug: string; id: number }, { fetch }) => {
+      await fetch(`/api/articles/${encodeURIComponent(slug)}/comments/${id}`, {
+        method: "DELETE",
+      });
+    }
+  );
+
+  const doDelete = async () =>
+    await deleteAction({ slug: params.slug, id: props.id });
 
   return (
     <div class="card">
@@ -44,8 +56,17 @@ const Comment: VoidComponent<CommentProps> = (props) => {
         <span class="date-posted">{postedAt()}</span>
         <Show when={canModify()}>
           <span class="mod-options">
-            {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
-            <i onClick={() => props.onDelete(props.id)} class="ion-trash-a" />
+            <button
+              onClick={doDelete}
+              class="ion-trash-a"
+              style={{
+                appearance: "none",
+                "background-color": "transparent",
+                border: 0,
+                padding: 0,
+              }}
+              disabled={deleting.pending}
+            />
           </span>
         </Show>
       </div>

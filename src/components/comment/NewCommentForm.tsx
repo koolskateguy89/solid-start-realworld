@@ -26,10 +26,13 @@ const NewCommentForm: VoidComponent<NewCommentFormProps> = () => {
         },
       };
 
-      const res = await fetch(`/api/articles/${slug}/comments`, {
-        method: "POST",
-        body: JSON.stringify(body),
-      });
+      const res = await fetch(
+        `/api/articles/${encodeURIComponent(slug)}/comments`,
+        {
+          method: "POST",
+          body: JSON.stringify(body),
+        }
+      );
 
       if (!res.ok) throw ["Invalid comment"];
 

@@ -3,15 +3,12 @@ import { type VoidComponent, For } from "solid-js";
 import Comment, { type CommentProps } from "./Comment";
 
 export type CommentListProps = {
-  comments: Omit<CommentProps, "onDelete">[];
-  onDelete: (id: number) => void;
+  comments: CommentProps[];
 };
 
 const CommentList: VoidComponent<CommentListProps> = (props) => {
   return (
-    <For each={props.comments}>
-      {(comment) => <Comment {...comment} onDelete={props.onDelete} />}
-    </For>
+    <For each={props.comments}>{(comment) => <Comment {...comment} />}</For>
   );
 };
 
