@@ -8,10 +8,10 @@ import {
 
 import { getUserProfile, createUserSession } from "~/server/lib/session";
 import type { User } from "~/types/api";
-import type { SigninError } from "~/routes/api/users/login";
+import type { LoginBody, LoginError } from "~/routes/api/users/login";
 import ErrorsList from "~/components/user/ErrorsList";
 
-// TODO: properly show SigninError
+// TODO: properly show LoginError
 
 // TODO?: handle redirectTo query param (see lib/session.server.ts)
 
@@ -26,24 +26,28 @@ export function routeData() {
 const LoginPage: VoidComponent = () => {
   const [loggingIn, { Form }] = createServerAction$(
     async (formData: FormData, { fetch }) => {
+      const body: LoginBody = {
+        user: Object.fromEntries(formData) as LoginBody["user"],
+      };
+
       const res = await fetch("/api/users/login", {
         method: "POST",
-        body: JSON.stringify({
-          user: Object.fromEntries(formData),
-        }),
+        body: JSON.stringify(body),
       });
-      const user = (await res.json()) as User | SigninError;
 
-      if ("errors" in user) {
-        if (user.errors === "notexists") {
-          throw "Account does not exist";
+      if (!res.ok) {
+        const { errors } = (await res.json()) as LoginError;
+        if (errors === "notexists") {
+          throw ["Account does not exist"];
         } else {
-          throw "Check your credentials";
+          throw ["Check your credentials"];
         }
       }
 
+      const user = (await res.json()) as User;
+
       // localStorage.setItem("token", data.token);
-      throw await createUserSession(user, "/");
+      return await createUserSession(user, "/");
     }
   );
 
@@ -58,7 +62,7 @@ const LoginPage: VoidComponent = () => {
               <A href="/register">Need an account?</A>
             </p>
 
-            <ErrorsList errors={loggingIn.error && [loggingIn.error]} />
+            <ErrorsList errors={loggingIn.error && loggingIn.error} />
 
             <Form>
               <fieldset class="form-group">
@@ -69,6 +73,7 @@ const LoginPage: VoidComponent = () => {
                   autocomplete="email"
                   class="form-control form-control-lg"
                   value="test@test.com"
+                  required
                 />
               </fieldset>
               <fieldset class="form-group">
@@ -79,6 +84,7 @@ const LoginPage: VoidComponent = () => {
                   autocomplete="current-password"
                   class="form-control form-control-lg"
                   value="pass"
+                  required
                 />
               </fieldset>
               <button

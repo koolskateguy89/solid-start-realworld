@@ -6,7 +6,7 @@ import { isCorrectPassword } from "~/server/lib/password";
 import { generateToken } from "~/server/lib/token";
 import type { User } from "~/types/api";
 
-export type SigninError = {
+export type LoginError = {
   errors: "notexists" | "invalid";
 };
 
@@ -18,13 +18,15 @@ const loginSchema = z.object({
   }),
 });
 
+export type LoginBody = z.infer<typeof loginSchema>;
+
 export async function POST({ request }: APIEvent) {
   const body = await request.json();
 
   const isValid = loginSchema.safeParse(body);
 
   if (!isValid.success)
-    return json<SigninError>({ errors: "invalid" }, { status: 422 });
+    return json<LoginError>({ errors: "invalid" }, { status: 422 });
 
   const { user } = isValid.data;
 
@@ -42,12 +44,12 @@ export async function POST({ request }: APIEvent) {
   });
 
   if (!dbUser)
-    return json<SigninError>({ errors: "notexists" }, { status: 422 });
+    return json<LoginError>({ errors: "notexists" }, { status: 422 });
 
   const isCorrect = await isCorrectPassword(user.password, dbUser.password);
 
   if (!isCorrect)
-    return json<SigninError>({ errors: "invalid" }, { status: 401 });
+    return json<LoginError>({ errors: "invalid" }, { status: 401 });
 
   return json<User>({
     email: dbUser.email,

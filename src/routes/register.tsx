@@ -29,20 +29,20 @@ const RegisterPage: VoidComponent = () => {
           user: Object.fromEntries(formData),
         }),
       });
-      const user = (await res.json()) as User | RegistrationError;
 
-      console.log("user =", user);
-
-      if ("errors" in user) {
-        if (user.errors === "invalid") {
-          throw "Check credentials";
+      if (!res.ok) {
+        const { errors } = (await res.json()) as RegistrationError;
+        if (errors === "invalid") {
+          throw ["Check credentials"];
         } else {
-          throw "That email is already taken";
+          throw ["That email is already taken"];
         }
       }
 
+      const user = (await res.json()) as User;
+
       // localStorage.setItem("token", data.token);
-      throw await createUserSession(user, "/");
+      return await createUserSession(user, "/");
     }
   );
 
@@ -57,7 +57,7 @@ const RegisterPage: VoidComponent = () => {
               <A href="/login">Have an account?</A>
             </p>
 
-            <ErrorsList errors={registering.error && [registering.error]} />
+            <ErrorsList errors={registering.error && registering.error} />
 
             <Form>
               <fieldset class="form-group">
@@ -68,6 +68,7 @@ const RegisterPage: VoidComponent = () => {
                   autocomplete="username"
                   class="form-control form-control-lg"
                   value="test"
+                  required
                 />
               </fieldset>
               <fieldset class="form-group">
@@ -78,6 +79,7 @@ const RegisterPage: VoidComponent = () => {
                   autocomplete="email"
                   class="form-control form-control-lg"
                   value="test@test.com"
+                  required
                 />
               </fieldset>
               <fieldset class="form-group">
@@ -88,6 +90,7 @@ const RegisterPage: VoidComponent = () => {
                   autocomplete="new-password"
                   class="form-control form-control-lg"
                   value="pass"
+                  required
                 />
               </fieldset>
               <button

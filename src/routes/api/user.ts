@@ -2,6 +2,7 @@ import { type APIEvent, json } from "solid-start";
 import { z } from "zod";
 
 import { requireUser } from "~/server/lib/auth";
+import { hashPassword } from "~/server/lib/password";
 import { generateToken } from "~/server/lib/token";
 import { prisma } from "~/server/db/client";
 import type { User } from "~/types/api";
@@ -36,6 +37,10 @@ const updateSchema = z.object({
   }),
 });
 
+export type UpdateUserBody = z.infer<typeof updateSchema>;
+
+export type UpdateUserError = "TODO";
+
 export async function POST({ request }: APIEvent) {
   const userProfile = await requireUser(request);
 
@@ -47,11 +52,23 @@ export async function POST({ request }: APIEvent) {
 
   const { user: data } = isValid.data;
 
+  console.log("data =", data);
+
+  // TODO: ensure new user & email are unique first, could use a findMany
+
+  // TODO: return error using type UpdateUserError
+  // and appropriate error code, 422?
+
   const user = await prisma.user.update({
     where: {
       username: userProfile.username,
     },
-    data,
+    data: {
+      ...data,
+      ...(data.password && {
+        password: await hashPassword(data.password),
+      }),
+    },
     select: {
       email: true,
       username: true,
