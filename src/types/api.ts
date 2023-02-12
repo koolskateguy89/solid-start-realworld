@@ -1,7 +1,7 @@
 // https://realworld-docs.netlify.app/docs/specs/backend-specs/api-response-format/
 
-export interface ErrorResponse {
-  errors: unknown;
+export interface ErrorResponse<TError = unknown> {
+  errors: TError;
 }
 
 export type User = {

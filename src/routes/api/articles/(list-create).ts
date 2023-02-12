@@ -4,8 +4,9 @@ import { z } from "zod";
 
 import { getUser, requireUser } from "~/server/lib/auth";
 import { prisma } from "~/server/db/client";
+import { generateSlug } from "~/server/lib/slug";
 import { selectDbArticle, toApiArticle } from "~/server/transform/article";
-import type { Article, ErrorResponse, MultipleArticles } from "~/types/api";
+import type { ErrorResponse, MultipleArticles } from "~/types/api";
 
 // https://realworld-docs.netlify.app/docs/specs/backend-specs/endpoints#list-articles
 const queryParamsSchema = z.object({
@@ -86,6 +87,7 @@ export async function GET({ request }: APIEvent) {
 // https://realworld-docs.netlify.app/docs/specs/backend-specs/endpoints#create-article
 const createArticleSchema = z.object({
   article: z.object({
+    // TODO: enforce title only a-zA-Z
     title: z.string().trim().min(1),
     description: z.string().trim().min(1),
     body: z.string().trim().min(1),
@@ -94,6 +96,8 @@ const createArticleSchema = z.object({
 });
 
 export type CreateArticleBody = z.infer<typeof createArticleSchema>;
+
+export type CreateArticleError = ErrorResponse<"slug-taken">;
 
 export async function POST({ request }: APIEvent) {
   const user = await requireUser(request);
@@ -105,15 +109,22 @@ export async function POST({ request }: APIEvent) {
 
   const { article: data } = isValid.data;
 
-  // TODO: lib func to generate slug
-  const slug = data.title.toLowerCase().replace(/ /g, "-");
+  const slug = generateSlug(data.title);
 
-  const article = await prisma.article.update({
-    where: {
-      slug,
-    },
+  const slugIsTaken =
+    (await prisma.article.count({
+      where: {
+        slug,
+      },
+    })) > 0;
+
+  if (slugIsTaken)
+    return json<CreateArticleError>({ errors: "slug-taken" }, 422);
+
+  const article = await prisma.article.create({
     data: {
       ...data,
+      slug,
       tagList: {
         connectOrCreate: data.tagList?.map((name) => ({
           where: { name },
