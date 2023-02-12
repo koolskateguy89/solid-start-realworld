@@ -23,6 +23,8 @@ import Sidebar from "~/components/home/Sidebar";
 
 type Feed = "global" | "your";
 
+// TODO: pagination
+
 export function routeData({ location, navigate }: RouteDataArgs) {
   return createRouteData(
     async ([hash, tag, navigate], { fetch }) => {
@@ -38,7 +40,7 @@ export function routeData({ location, navigate }: RouteDataArgs) {
       } else if (feed === "your") {
         url = "/api/articles/feed";
       } else {
-        return navigate("/");
+        throw navigate("/");
       }
 
       const res = await fetch(url, {});

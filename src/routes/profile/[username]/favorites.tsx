@@ -9,7 +9,7 @@ import {
 } from "solid-start";
 
 import type { routeData as profileRouteData } from "../[username]";
-import type { ErrorResponse, MultipleArticles } from "~/types/api";
+import type { MultipleArticles } from "~/types/api";
 import ArticlePreviews from "~/components/article/ArticlePreviews";
 import UserInfo from "~/components/profile/UserInfo";
 
@@ -23,13 +23,10 @@ export function routeData({
         `/api/articles?favorited=${encodeURIComponent(username)}`,
         {}
       );
-      const multipleArticles = (await res.json()) as
-        | MultipleArticles
-        | ErrorResponse;
 
-      if ("errors" in multipleArticles) {
-        throw redirect("/");
-      }
+      if (!res.ok) throw redirect("/");
+
+      const multipleArticles = (await res.json()) as MultipleArticles;
 
       return multipleArticles.articles;
     },

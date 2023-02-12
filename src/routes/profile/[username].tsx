@@ -15,9 +15,7 @@ export function routeData({ params }: RouteDataArgs) {
         {}
       );
 
-      if (!res.ok) {
-        throw redirect("/");
-      }
+      if (!res.ok) throw redirect("/");
 
       return (await res.json()) as Profile;
     },

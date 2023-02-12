@@ -25,9 +25,7 @@ export function routeData({
         {}
       );
 
-      if (!res.ok) {
-        throw redirect("/");
-      }
+      if (!res.ok) throw redirect("/");
 
       const multipleArticles = (await res.json()) as MultipleArticles;
 
