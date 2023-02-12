@@ -20,11 +20,10 @@ const Comment: VoidComponent<CommentProps> = (props) => {
   const params = useParams<{ slug: string }>();
 
   const [deleting, deleteAction] = createRouteAction(
-    async ({ slug, id }: { slug: string; id: number }, { fetch }) => {
+    async ({ slug, id }: { slug: string; id: number }, { fetch }) =>
       await fetch(`/api/articles/${encodeURIComponent(slug)}/comments/${id}`, {
         method: "DELETE",
-      });
-    }
+      })
   );
 
   const doDelete = async () =>
