@@ -1,6 +1,5 @@
 import { type VoidComponent, Show } from "solid-js";
-import { useParams, A } from "solid-start";
-import { createServerAction$ } from "solid-start/server";
+import { createRouteAction, useParams, A } from "solid-start";
 
 import type { CreateCommentBody } from "~/routes/api/articles/[slug]/comments/(comment)";
 import type { Comment } from "~/types/api";
@@ -17,8 +16,8 @@ const NewCommentForm: VoidComponent<NewCommentFormProps> = () => {
 
   const params = useParams<{ slug: string }>();
 
-  const [posting, { Form }] = createServerAction$(
-    async (formData: FormData, { fetch, request }) => {
+  const [posting, { Form }] = createRouteAction(
+    async (formData: FormData, { fetch }) => {
       const slug = formData.get("slug") as string;
 
       const body: CreateCommentBody = {
@@ -29,7 +28,6 @@ const NewCommentForm: VoidComponent<NewCommentFormProps> = () => {
 
       const res = await fetch(`/api/articles/${slug}/comments`, {
         method: "POST",
-        headers: request.headers,
         body: JSON.stringify(body),
       });
 
