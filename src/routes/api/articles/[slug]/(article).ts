@@ -31,15 +31,47 @@ export async function GET({ params, request }: APIEvent) {
 }
 
 // https://realworld-docs.netlify.app/docs/specs/backend-specs/endpoints#update-article
-// TODO: schema
+const updateArticleSchema = z.object({
+  article: z.object({
+    title: z.string().trim().min(1).optional(),
+    description: z.string().trim().min(1).optional(),
+    body: z.string().trim().min(1).optional(),
+  }),
+});
 
-export type UpdateArticleBody = {
-  // TODO
-};
+export type UpdateArticleBody = z.infer<typeof updateArticleSchema>;
 
-export function PUT() {
-  // TODO
-  return json<ErrorResponse>({ errors: "Not implemented" }, { status: 501 });
+export async function PUT({ params, request }: APIEvent) {
+  const user = await requireUser(request);
+
+  const { slug } = params;
+
+  const isValid = updateArticleSchema.safeParse(await request.json());
+
+  if (!isValid.success)
+    return json<ErrorResponse>({ errors: { body: isValid.error } }, 422);
+
+  const { article: data } = isValid.data;
+
+  // TODO!: basically regenerate slug
+  // slug seems to be lowercase and hyphenated
+  // and unique
+  // so we need to check if the slug is unique
+  // though the title is not unique
+  // will need to make lib function for generating slug
+
+  const article = await prisma.article.update({
+    where: {
+      slug,
+    },
+    data: {
+      ...data,
+      // slug
+    },
+    select: selectDbArticle(user.username),
+  });
+
+  return json(toApiArticle(article));
 }
 
 // https://realworld-docs.netlify.app/docs/specs/backend-specs/endpoints#delete-article

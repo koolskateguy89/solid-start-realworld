@@ -86,17 +86,49 @@ export async function GET({ request }: APIEvent) {
 // https://realworld-docs.netlify.app/docs/specs/backend-specs/endpoints#create-article
 const createArticleSchema = z.object({
   article: z.object({
-    title: z.string(),
-    description: z.string(),
-    body: z.string(),
-    tagList: z.array(z.string()).optional(),
+    title: z.string().trim().min(1),
+    description: z.string().trim().min(1),
+    body: z.string().trim().min(1),
+    tagList: z.array(z.string().trim().min(1)).optional(),
   }),
 });
 
 export type CreateArticleBody = z.infer<typeof createArticleSchema>;
 
-// auth required, user is author
 export async function POST({ request }: APIEvent) {
-  // TODO
   const user = await requireUser(request);
+
+  const isValid = createArticleSchema.safeParse(await request.json());
+
+  if (!isValid.success)
+    return json<ErrorResponse>({ errors: { body: isValid.error } }, 422);
+
+  const { article: data } = isValid.data;
+
+  // TODO: lib func to generate slug
+  const slug = data.title.toLowerCase().replace(/ /g, "-");
+
+  const article = await prisma.article.update({
+    where: {
+      slug,
+    },
+    data: {
+      ...data,
+      tagList: {
+        connectOrCreate: data.tagList?.map((name) => ({
+          where: { name },
+          create: { name },
+        })),
+      },
+      author: {
+        connect: {
+          username: user.username,
+        },
+      },
+    },
+    // could manually select fields here, but this is easier
+    select: selectDbArticle(user.username),
+  });
+
+  return json(toApiArticle(article));
 }
