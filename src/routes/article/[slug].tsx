@@ -7,11 +7,11 @@ import {
   Title,
 } from "solid-start";
 
+import type { Article, MultipleComments } from "~/types/api";
 import ArticleContent from "~/components/article/ArticleContent";
 import ArticleMeta from "~/components/article/ArticleMeta";
 import CommentList from "~/components/comment/CommentList";
 import NewCommentForm from "~/components/comment/NewCommentForm";
-import type { Article, MultipleComments } from "~/types/api";
 
 export function routeData({ params }: RouteDataArgs) {
   const article = createRouteData(

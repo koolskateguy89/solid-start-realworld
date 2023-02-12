@@ -93,6 +93,8 @@ const createArticleSchema = z.object({
   }),
 });
 
+export type CreateArticleBody = z.infer<typeof createArticleSchema>;
+
 // auth required, user is author
 export async function POST({ request }: APIEvent) {
   // TODO

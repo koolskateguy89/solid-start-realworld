@@ -31,6 +31,12 @@ export async function GET({ params, request }: APIEvent) {
 }
 
 // https://realworld-docs.netlify.app/docs/specs/backend-specs/endpoints#update-article
+// TODO: schema
+
+export type UpdateArticleBody = {
+  // TODO
+};
+
 export function PUT() {
   // TODO
   return json<ErrorResponse>({ errors: "Not implemented" }, { status: 501 });
