@@ -10,6 +10,8 @@ const UserInfo: VoidComponent<UserInfoProps> = (props) => {
 
   const canFollow = () => session()?.user?.username !== props.username;
 
+  // TODO: action follow/unfollow
+
   return (
     <div class="user-info">
       <div class="container">

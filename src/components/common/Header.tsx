@@ -15,7 +15,6 @@ const Header: VoidComponent = () => {
         </A>
         <ul class="nav navbar-nav pull-xs-right">
           <li class="nav-item">
-            {/* TODO: Add "active" class when you're on that page" */}
             <A href="/" class="nav-link" activeClass="active" end>
               Home
             </A>

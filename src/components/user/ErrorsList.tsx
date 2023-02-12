@@ -5,7 +5,6 @@ export type ErrorsListProps = {
 };
 
 const ErrorsList: VoidComponent<ErrorsListProps> = (props) => {
-  // TODO
   return (
     <ul class="error-messages">
       <For each={props.errors}>{(error) => <li>{error}</li>}</For>
