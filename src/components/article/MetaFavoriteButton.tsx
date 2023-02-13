@@ -55,7 +55,7 @@ const MetaFavoriteButton: VoidComponent<MetaFavoriteButtonProps> = (props) => {
       Post{" "}
       <span class="counter">
         (
-        <Switch fallback={props.favoritesCount}>
+        <Switch fallback={`${props.favoritesCount}`}>
           <Match when={favoriting.pending}>{props.favoritesCount + 1}</Match>
           <Match when={unfavoriting.pending}>{props.favoritesCount - 1}</Match>
         </Switch>
