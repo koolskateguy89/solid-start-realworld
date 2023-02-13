@@ -3,6 +3,7 @@ import { A } from "solid-start";
 
 import type { Article } from "~/types/api";
 import { formattedDate } from "~/lib/utils";
+import PreviewFavoriteButton from "./PreviewFavoriteButton";
 
 export type ArticlePreviewProps = Article;
 
@@ -15,28 +16,29 @@ const ArticlePreview: VoidComponent<ArticlePreviewProps> = (props) => {
         <A href={`/profile/${encodeURIComponent(props.author.username)}`}>
           <img src={props.author.image} alt={props.author.username} />
         </A>
+
         <div class="info">
-          <A href={`/profile/${props.author.username}`} class="author">
+          <A
+            href={`/profile/${encodeURIComponent(props.author.username)}`}
+            class="author"
+          >
             {props.author.username}
           </A>
           <span class="date">{createdAt()}</span>
         </div>
-        <button
-          type="button"
-          class="btn btn-sm pull-xs-right"
-          classList={{
-            "btn-primary": props.favorited,
-            "btn-outline-primary": !props.favorited,
-          }}
-        >
-          <i class="ion-heart" /> {props.favoritesCount}
-        </button>
+
+        <PreviewFavoriteButton
+          slug={props.slug}
+          favorited={props.favorited}
+          favoritesCount={props.favoritesCount}
+        />
       </div>
+
       <A
         href={`/article/${encodeURIComponent(props.slug)}`}
         class="preview-link"
       >
-        {/* TODO: probably want to limit length */}
+        {/* TODO: probably want to limit length displayed */}
         <h1>{props.title}</h1>
         <p>{props.description}</p>
         <span>Read more...</span>

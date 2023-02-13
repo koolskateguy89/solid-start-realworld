@@ -4,6 +4,8 @@ import { createRouteAction, A } from "solid-start";
 import type { Article } from "~/types/api";
 import { useSession } from "~/lib/session";
 import { formattedDate } from "~/lib/utils";
+import MetaFavoriteButton from "./MetaFavoriteButton";
+import MetaFollowButton from "./MetaFollowButton";
 
 export type ArticleMetaProps = Pick<
   Article,
@@ -11,11 +13,10 @@ export type ArticleMetaProps = Pick<
 >;
 
 const ArticleMeta: VoidComponent<ArticleMetaProps> = (props) => {
-  const postedAt = () => formattedDate(props.createdAt);
-
   const session = useSession();
-
   const canModify = () => session()?.user?.username === props.author.username;
+
+  const postedAt = () => formattedDate(props.createdAt);
 
   const [, deleteAction] = createRouteAction(
     async (slug: string, { fetch }) =>
@@ -44,31 +45,16 @@ const ArticleMeta: VoidComponent<ArticleMetaProps> = (props) => {
         when={canModify()}
         fallback={
           <>
-            <button
-              type="button"
-              class="btn btn-sm"
-              classList={{
-                "btn-secondary": props.author.following,
-                "btn-outline-secondary": !props.author.following,
-              }}
-            >
-              <i class="ion-plus-round" />
-              &nbsp; {props.author.following ? "Unfollow" : "Follow"}{" "}
-              {props.author.username}
-            </button>
+            <MetaFollowButton
+              username={props.author.username}
+              following={props.author.following}
+            />
             &nbsp;&nbsp;
-            <button
-              type="button"
-              class="btn btn-sm"
-              classList={{
-                "btn-primary": props.favorited,
-                "btn-outline-primary": !props.favorited,
-              }}
-            >
-              <i class="ion-heart" />
-              &nbsp; {props.favorited ? "Unfavorite" : "Favorite"} Post{" "}
-              <span class="counter">({props.favoritesCount})</span>
-            </button>
+            <MetaFavoriteButton
+              slug={props.slug}
+              favorited={props.favorited}
+              favoritesCount={props.favoritesCount}
+            />
           </>
         }
       >

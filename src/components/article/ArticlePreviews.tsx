@@ -9,7 +9,7 @@ export type ArticlePreviewsProps = {
 
 const ArticlePreviews: VoidComponent<ArticlePreviewsProps> = (props) => {
   return (
-    <For each={props.articles}>
+    <For each={props.articles} fallback="Nothing to see here...">
       {(article) => <ArticlePreview {...article} />}
     </For>
   );
