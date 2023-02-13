@@ -6,11 +6,7 @@ import type { Comment } from "~/types/api";
 import { useSession } from "~/lib/session";
 import ErrorsList from "~/components/user/ErrorsList";
 
-export type NewCommentFormProps = {
-  slug: string;
-};
-
-const NewCommentForm: VoidComponent<NewCommentFormProps> = () => {
+const NewCommentForm: VoidComponent = () => {
   const session = useSession();
   const user = () => session()?.user;
 
@@ -39,6 +35,9 @@ const NewCommentForm: VoidComponent<NewCommentFormProps> = () => {
       // TODO: clear form on success, idk how tho
 
       return (await res.json()) as Comment;
+    },
+    {
+      invalidate: ["comments", params.slug],
     }
   );
 

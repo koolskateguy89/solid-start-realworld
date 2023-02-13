@@ -1,4 +1,10 @@
-import { type VoidComponent, Show, Suspense } from "solid-js";
+import {
+  type VoidComponent,
+  createSignal,
+  Show,
+  Suspense,
+  For,
+} from "solid-js";
 import {
   type RouteDataArgs,
   createRouteData,
@@ -10,7 +16,7 @@ import {
 import type { Article, MultipleComments } from "~/types/api";
 import ArticleContent from "~/components/article/ArticleContent";
 import ArticleMeta from "~/components/article/ArticleMeta";
-import CommentList from "~/components/comment/CommentList";
+import Comment from "~/components/comment/Comment";
 import NewCommentForm from "~/components/comment/NewCommentForm";
 
 export function routeData({ params }: RouteDataArgs) {
@@ -58,6 +64,12 @@ export function routeData({ params }: RouteDataArgs) {
 // request is made.
 // SolidStart is magic.
 
+// It works because all createXData will be refetched after an action, see
+// https://start.solidjs.com/api/createRouteAction#refetching-data-after-an-action
+// Though this causes everything to be refetched which isn't ideal.
+// Avoided refecthing everything by specifying a key to invalidate, see
+// https://start.solidjs.com/api/createRouteAction#invalidating-specific-data-after-an-action
+
 const ArticlePage: VoidComponent = () => {
   const { article, comments } = useRouteData<typeof routeData>();
 
@@ -97,9 +109,13 @@ const ArticlePage: VoidComponent = () => {
 
               <div class="row">
                 <div class="col-xs-12 col-md-8 offset-md-2">
-                  <NewCommentForm slug={article.slug} />
+                  <NewCommentForm />
 
-                  <CommentList comments={comments() ?? []} />
+                  {/* TODO: optimistic UI for adding comment */}
+
+                  <For each={comments() ?? []}>
+                    {(comment) => <Comment {...comment} />}
+                  </For>
                 </div>
               </div>
             </div>
