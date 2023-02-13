@@ -1,10 +1,4 @@
-import {
-  type VoidComponent,
-  createSignal,
-  Show,
-  Suspense,
-  For,
-} from "solid-js";
+import { type VoidComponent, Show, Suspense, For } from "solid-js";
 import {
   type RouteDataArgs,
   createRouteData,
@@ -12,6 +6,7 @@ import {
   useRouteData,
   Title,
 } from "solid-start";
+import { createServerData$ } from "solid-start/server";
 
 import type { Article, MultipleComments } from "~/types/api";
 import ArticleContent from "~/components/article/ArticleContent";
@@ -20,9 +15,11 @@ import Comment from "~/components/comment/Comment";
 import NewCommentForm from "~/components/comment/NewCommentForm";
 
 export function routeData({ params }: RouteDataArgs) {
-  const article = createRouteData(
-    async ([, slug], { fetch }) => {
-      const res = await fetch(`/api/articles/${encodeURIComponent(slug!)}`, {});
+  const article = createServerData$(
+    async ([, slug], { fetch, request }) => {
+      const res = await fetch(`/api/articles/${encodeURIComponent(slug!)}`, {
+        headers: request.headers,
+      });
 
       if (!res.ok) throw redirect("/");
 
@@ -110,8 +107,6 @@ const ArticlePage: VoidComponent = () => {
               <div class="row">
                 <div class="col-xs-12 col-md-8 offset-md-2">
                   <NewCommentForm />
-
-                  {/* TODO: optimistic UI for adding comment */}
 
                   <For each={comments() ?? []}>
                     {(comment) => <Comment {...comment} />}

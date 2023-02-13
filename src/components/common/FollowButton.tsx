@@ -3,22 +3,28 @@ import { useNavigate } from "solid-start";
 
 import { useSession } from "~/lib/session";
 import { createFollowAction, createUnfollowAction } from "~/lib/actions/follow";
+import type { InvalidateFnResult } from "~/lib/actions";
 
-export type MetaFollowButtonProps = {
+export type FollowButtonProps = {
   username: string;
   following: boolean;
+  invalidate?: InvalidateFnResult;
+  class: string;
 };
 
 // Optimistic UI
-const MetaFollowButton: VoidComponent<MetaFollowButtonProps> = (props) => {
+const FollowButton: VoidComponent<FollowButtonProps> = (props) => {
   const navigate = useNavigate();
 
   const session = useSession();
   const isLoggedIn = () => Boolean(session()?.user);
 
-  // TODO: use invalidate key
-  const [following, follow] = createFollowAction();
-  const [unfollowing, unfollow] = createUnfollowAction();
+  const [following, follow] = createFollowAction({
+    invalidate: () => props.invalidate,
+  });
+  const [unfollowing, unfollow] = createUnfollowAction({
+    invalidate: () => props.invalidate,
+  });
 
   const handleClick = async () => {
     if (!isLoggedIn()) return navigate("/login");
@@ -35,7 +41,7 @@ const MetaFollowButton: VoidComponent<MetaFollowButtonProps> = (props) => {
     <button
       type="button"
       onClick={handleClick}
-      class="btn btn-sm"
+      class={props.class}
       classList={{
         "btn-secondary": lookFollowing(),
         "btn-outline-secondary": lookUnfollowing(),
@@ -45,12 +51,12 @@ const MetaFollowButton: VoidComponent<MetaFollowButtonProps> = (props) => {
       <i class="ion-plus-round" />
       &nbsp;{" "}
       <Switch>
-        <Match when={lookUnfollowing()}>Unfollow</Match>
-        <Match when={lookFollowing()}>Follow</Match>
+        <Match when={lookFollowing()}>Unfollow</Match>
+        <Match when={lookUnfollowing()}>Follow</Match>
       </Switch>{" "}
       {props.username}
     </button>
   );
 };
 
-export default MetaFollowButton;
+export default FollowButton;

@@ -4,8 +4,8 @@ import { createRouteAction, A } from "solid-start";
 import type { Article } from "~/types/api";
 import { useSession } from "~/lib/session";
 import { formattedDate } from "~/lib/utils";
+import FollowButton from "~/components/common/FollowButton";
 import MetaFavoriteButton from "./MetaFavoriteButton";
-import MetaFollowButton from "./MetaFollowButton";
 
 export type ArticleMetaProps = Pick<
   Article,
@@ -45,9 +45,11 @@ const ArticleMeta: VoidComponent<ArticleMetaProps> = (props) => {
         when={canModify()}
         fallback={
           <>
-            <MetaFollowButton
+            <FollowButton
               username={props.author.username}
               following={props.author.following}
+              invalidate={["article", props.slug]}
+              class="btn btn-sm"
             />
             &nbsp;&nbsp;
             <MetaFavoriteButton

@@ -1,10 +1,10 @@
 import { createRouteAction } from "solid-start";
 
-import type { Options } from ".";
+import type { ActionOptions } from ".";
 
 // POST/DELETE /api/profiles/:username/follow
 
-export function createFollowAction(options?: Options) {
+export function createFollowAction(options?: ActionOptions) {
   return createRouteAction(async (username: string, { fetch }) => {
     await fetch(`/api/profiles/${encodeURIComponent(username)}/follow`, {
       method: "POST",
@@ -12,7 +12,7 @@ export function createFollowAction(options?: Options) {
   }, options);
 }
 
-export function createUnfollowAction(options?: Options) {
+export function createUnfollowAction(options?: ActionOptions) {
   return createRouteAction(async (username: string, { fetch }) => {
     await fetch(`/api/profiles/${encodeURIComponent(username)}/follow`, {
       method: "DELETE",
