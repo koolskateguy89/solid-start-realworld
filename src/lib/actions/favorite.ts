@@ -1,10 +1,10 @@
 import { createRouteAction } from "solid-start";
 
-import type { Options } from ".";
+import type { ActionOptions } from ".";
 
 // POST/DELETE /api/articles/:slug/favorite
 
-export function createFavoriteAction(options?: Options) {
+export function createFavoriteAction(options?: ActionOptions) {
   return createRouteAction(async (slug: string, { fetch }) => {
     await fetch(`/api/articles/${encodeURIComponent(slug)}/favorite`, {
       method: "POST",
@@ -12,7 +12,7 @@ export function createFavoriteAction(options?: Options) {
   }, options);
 }
 
-export function createUnfavoriteAction(options?: Options) {
+export function createUnfavoriteAction(options?: ActionOptions) {
   return createRouteAction(async (slug: string, { fetch }) => {
     await fetch(`/api/articles/${encodeURIComponent(slug)}/favorite`, {
       method: "DELETE",

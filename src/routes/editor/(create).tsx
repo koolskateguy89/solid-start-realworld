@@ -2,15 +2,13 @@ import { type VoidComponent } from "solid-js";
 import { createRouteAction, Title } from "solid-start";
 import { createServerData$, redirect } from "solid-start/server";
 
-import { getUserProfile } from "~/server/lib/session";
+import { requireUser } from "~/server/lib/session";
 import type { CreateArticleBody } from "~/routes/api/articles/(list-create)";
 import type { Article } from "~/types/api";
 
 export function routeData() {
-  // if not signed in, redirect to home page
   return createServerData$(async (_, { request }) => {
-    const user = await getUserProfile(request);
-    if (!user) throw redirect("/");
+    await requireUser(request);
   });
 }
 

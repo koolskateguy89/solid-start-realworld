@@ -38,6 +38,7 @@ export function routeData({
   return { profile, articles };
 }
 
+// TODO: use [username].tsx to define layout not just data
 const FavoritesPage: VoidComponent = () => {
   const { profile, articles } = useRouteData<typeof routeData>();
 

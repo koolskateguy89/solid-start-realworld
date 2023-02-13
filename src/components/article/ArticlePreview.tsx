@@ -7,7 +7,7 @@ import FavoriteButton, {
   type FavoriteButtonProps,
 } from "~/components/common/FavoriteButton";
 
-// TODO: pass invlidate prop to ArticlePreview to pass to this
+// TODO: pass invalidate prop to ArticlePreview to pass to this
 const PreviewFavoriteButton: VoidComponent<FavoriteButtonProps> = (props) => (
   <FavoriteButton class="btn btn-sm pull-xs-right" {...props}>
     {({ favoriting, unfavoriting }) => (

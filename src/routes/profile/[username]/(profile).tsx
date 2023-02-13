@@ -39,17 +39,7 @@ export function routeData({
   return { profile, articles };
 }
 
-// TODO?: handle favorites in this page, might be able to with shallow routing
-// don't think shallow routing is the correct concept, but what we want is
-// what Next.Js does with Link's `as` prop
-// (shadow routing isn't a thing in solid-start because it doesn't use a vDOM)
-
-// tbh it should be possible with a catch all route that
-// only matches if it's "/" or "/favorites"
-// but then how would we basically error if it's not one of those two?
-// i dont think solid start supports that (basically next.js's notFound
-// return value in getServersideProps)
-
+// TODO: use [username].tsx to define layout not just data
 const ProfilePage: VoidComponent = () => {
   const { profile, articles } = useRouteData<typeof routeData>();
 

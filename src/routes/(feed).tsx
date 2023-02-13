@@ -2,6 +2,7 @@ import {
   type VoidComponent,
   createEffect,
   createSignal,
+  For,
   Show,
   Suspense,
 } from "solid-js";
@@ -19,6 +20,7 @@ import type { MultipleArticles } from "~/types/api";
 import { useSession } from "~/lib/session";
 import Banner from "~/components/home/Banner";
 import ArticlePreviews from "~/components/article/ArticlePreviews";
+import ArticlePreview from "~/components/article/ArticlePreview";
 import Sidebar from "~/components/home/Sidebar";
 
 type Feed = "global" | "your";
@@ -124,12 +126,11 @@ const HomePage: VoidComponent = () => {
             </div>
 
             <Suspense fallback="Loading articles...">
-              <Show
-                when={(articles() ?? []).length > 0}
-                fallback="Nothing to see here..."
-              >
-                <ArticlePreviews articles={articles()!} />
-              </Show>
+              <ArticlePreviews articles={articles() ?? []} />
+              {/* TODO: decide which to use depending on having to pass key to ArticlePreview */}
+              {/* <For each={articles() ?? []} fallback="Nothing to see here...">
+                {(article) => <ArticlePreview {...article} />}
+              </For> */}
             </Suspense>
           </div>
 
