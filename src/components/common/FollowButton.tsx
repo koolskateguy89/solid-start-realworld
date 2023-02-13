@@ -1,9 +1,9 @@
 import { type VoidComponent, Switch, Match } from "solid-js";
 import { useNavigate } from "solid-start";
 
+import type { InvalidateFnResult } from "~/lib/actions";
 import { useSession } from "~/lib/session";
 import { createFollowAction, createUnfollowAction } from "~/lib/actions/follow";
-import type { InvalidateFnResult } from "~/lib/actions";
 
 export type FollowButtonProps = {
   username: string;

@@ -1,11 +1,44 @@
-import { type VoidComponent, Show } from "solid-js";
+import { type VoidComponent, Switch, Match, Show } from "solid-js";
 import { createRouteAction, A } from "solid-start";
 
 import type { Article } from "~/types/api";
 import { useSession } from "~/lib/session";
 import { formattedDate } from "~/lib/utils";
 import FollowButton from "~/components/common/FollowButton";
-import MetaFavoriteButton from "./MetaFavoriteButton";
+import FavoriteButton, {
+  type FavoriteButtonProps,
+} from "~/components/common/FavoriteButton";
+
+// FIXME: some weird bug idk how to fix rn, just click and you'll see
+const MetaFavoriteButton: VoidComponent<
+  Omit<FavoriteButtonProps, "invalidate">
+> = (props) => (
+  <FavoriteButton
+    invalidate={["article", props.slug]}
+    class="btn btn-sm"
+    {...props}
+  >
+    {({ favoriting, lookFavorited, unfavoriting, lookUnfavorited }) => (
+      <>
+        <i class="ion-heart" />
+        &nbsp;{" "}
+        <Switch>
+          <Match when={lookFavorited}>Unfavorite</Match>
+          <Match when={lookUnfavorited}>Favorite</Match>
+        </Switch>{" "}
+        Post{" "}
+        <span class="counter">
+          (
+          <Switch fallback={`${props.favoritesCount}`}>
+            <Match when={favoriting}>{props.favoritesCount + 1}</Match>
+            <Match when={unfavoriting}>{props.favoritesCount - 1}</Match>
+          </Switch>
+          )
+        </span>
+      </>
+    )}
+  </FavoriteButton>
+);
 
 export type ArticleMetaProps = Pick<
   Article,
@@ -66,7 +99,6 @@ const ArticleMeta: VoidComponent<ArticleMetaProps> = (props) => {
         >
           <i class="ion-edit" /> Edit Article
         </A>
-
         <button
           type="button"
           class="btn btn-outline-danger btn-sm"

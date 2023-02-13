@@ -1,9 +1,26 @@
-import { type VoidComponent, For } from "solid-js";
+import { type VoidComponent, For, Switch, Match } from "solid-js";
 import { A } from "solid-start";
 
 import type { Article } from "~/types/api";
 import { formattedDate } from "~/lib/utils";
-import PreviewFavoriteButton from "./PreviewFavoriteButton";
+import FavoriteButton, {
+  type FavoriteButtonProps,
+} from "~/components/common/FavoriteButton";
+
+// TODO: pass invlidate prop to ArticlePreview to pass to this
+const PreviewFavoriteButton: VoidComponent<FavoriteButtonProps> = (props) => (
+  <FavoriteButton class="btn btn-sm pull-xs-right" {...props}>
+    {({ favoriting, unfavoriting }) => (
+      <>
+        <i class="ion-heart" />{" "}
+        <Switch fallback={`${props.favoritesCount}`}>
+          <Match when={favoriting}>{props.favoritesCount + 1}</Match>
+          <Match when={unfavoriting}>{props.favoritesCount - 1}</Match>
+        </Switch>
+      </>
+    )}
+  </FavoriteButton>
+);
 
 export type ArticlePreviewProps = Article;
 
