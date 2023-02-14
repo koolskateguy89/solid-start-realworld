@@ -6,31 +6,6 @@ import { serverEnv } from "~/env/server";
 
 // https://start.solidjs.com/advanced/session
 
-// Using cookies makes more sense than localStorage with an SSR framework
-// becausew when using localStorage, a page load would look like:
-//   client --[request]-> server
-//   server --[page]-> client
-//   client --[token]-> server (to decode token for session)
-//   server --[session]-> client (to set session state & be able to use session)
-// and when there's content that is dependent on the user being signed in, there would be a flash of different content
-// with cookies, the page load would look like:
-//   client --[request]-> server (with cookie)
-//   server --[page]-> client (with session dependent content & session state)
-
-// should use SolidStart's session management thingy
-// https://start.solidjs.com/advanced/session
-// https://start.solidjs.com/core-concepts/api-routes#session-management
-// will want to store a subset of User (image at least) in the cookie, not just the username
-// also see https://start.solidjs.com/api/useServerEvent for accessing the session on client-side
-// (not sure if solid sessionStore can be used on client-side)
-
-// but will try to implement an approach that accepts both token in Authorisation header
-// and cookie on API routes
-
-// with requireSession() on API routes, will we be able to throw an Exception?
-// so we don't have to handle the case where the session is null in every API route,
-// as requireSession() will handle it for us
-
 const storage = createCookieSessionStorage({
   cookie: {
     // TODO: change name of cookie
@@ -53,8 +28,8 @@ export async function createUserSession(
   const session = await storage.getSession();
 
   session.set("userProfile", {
+    email: user.email,
     username: user.username,
-    bio: user.bio,
     image: user.image,
   } satisfies SessionProfile);
 

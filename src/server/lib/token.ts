@@ -22,7 +22,7 @@ auth strategy:
 
 /**
  * Generates a JWT token that is to be used as an authentication token.
- * - payload contains username, image and bio
+ * - payload contains email, username and image
  * - expires in a week from the date it was generated
  *
  * @param user
@@ -32,9 +32,9 @@ export function generateToken(user: SessionProfile): string {
   return jwt.sign(
     {
       user: {
+        email: user.email,
         username: user.username,
         image: user.image,
-        bio: user.bio,
       },
     } satisfies TokenSession,
     serverEnv.TOKEN_SECRET,
