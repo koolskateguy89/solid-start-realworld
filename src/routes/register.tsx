@@ -12,6 +12,7 @@ import type { RegistrationError } from "~/routes/api/users/(register)";
 import ErrorsList from "~/components/user/ErrorsList";
 
 export function routeData() {
+  // FIXME: this is not working, idk why
   // if signed in, redirect to home page
   return createServerData$(async (_, { request }) => {
     const user = await getUserProfile(request);
@@ -41,7 +42,6 @@ const RegisterPage: VoidComponent = () => {
 
       const user = (await res.json()) as User;
 
-      // localStorage.setItem("token", data.token);
       return await createUserSession(user, "/");
     }
   );
@@ -57,7 +57,7 @@ const RegisterPage: VoidComponent = () => {
               <A href="/login">Have an account?</A>
             </p>
 
-            <ErrorsList errors={registering.error && registering.error} />
+            <ErrorsList errors={registering.error} />
 
             <Form>
               <fieldset class="form-group">

@@ -16,14 +16,7 @@ export async function requireUser(request: Request): Promise<SessionProfile> {
   const user = await getUser(request);
 
   if (!user) {
-    throw json(
-      {
-        errors: "Unauthorised",
-      } satisfies ErrorResponse,
-      {
-        status: 401,
-      }
-    );
+    throw json<ErrorResponse>({ errors: "Unauthorised" }, 401);
   }
 
   return user;

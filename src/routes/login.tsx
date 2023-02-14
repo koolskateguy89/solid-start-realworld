@@ -16,9 +16,11 @@ import ErrorsList from "~/components/user/ErrorsList";
 // TODO?: handle redirectTo query param (see lib/session.server.ts)
 
 export function routeData() {
+  // FIXME: this is not working, idk why
   // if signed in, redirect to home page
   return createServerData$(async (_, { request }) => {
     const user = await getUserProfile(request);
+    // FIXME: it throws the redirect, but it doesn't actually redirect
     if (user) throw redirect("/");
   });
 }
@@ -46,7 +48,6 @@ const LoginPage: VoidComponent = () => {
 
       const user = (await res.json()) as User;
 
-      // localStorage.setItem("token", data.token);
       return await createUserSession(user, "/");
     }
   );
@@ -62,7 +63,7 @@ const LoginPage: VoidComponent = () => {
               <A href="/register">Need an account?</A>
             </p>
 
-            <ErrorsList errors={loggingIn.error && loggingIn.error} />
+            <ErrorsList errors={loggingIn.error} />
 
             <Form>
               <fieldset class="form-group">

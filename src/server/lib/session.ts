@@ -1,8 +1,8 @@
-import { json, redirect } from "solid-start/server";
+import { redirect } from "solid-start/server";
 import { createCookieSessionStorage } from "solid-start/session";
 import { z } from "zod";
 
-import type { ErrorResponse, Profile } from "~/types/api";
+import type { Profile, User } from "~/types/api";
 import { serverEnv } from "~/env/server";
 
 // https://start.solidjs.com/advanced/session
@@ -32,9 +32,14 @@ import { serverEnv } from "~/env/server";
 // so we don't have to handle the case where the session is null in every API route,
 // as requireSession() will handle it for us
 
+// TODO: dont need to include bio in session
 export type SessionProfile = Omit<Profile, "following">;
 
+// TODO: typecheck thingy to check what i need to change for this to work
+// export type SessionProfile = Omit<User, "token" | "bio">;
+
 const sessionProfileSchema = z.object({
+  // email: z.string().email(),
   username: z.string().min(1),
   bio: z.string(),
   image: z.string(),
@@ -42,6 +47,7 @@ const sessionProfileSchema = z.object({
 
 const storage = createCookieSessionStorage({
   cookie: {
+    // TODO: change name of cookie
     name: "RJ_session",
     // secure doesn't work on localhost for Safari
     // https://web.dev/when-to-use-local-https/
@@ -64,7 +70,7 @@ export async function createUserSession<TUser extends SessionProfile>(
     username: user.username,
     bio: user.bio,
     image: user.image,
-  });
+  } satisfies SessionProfile);
 
   return redirect(redirectTo, {
     headers: {

@@ -60,6 +60,7 @@ const Comment: VoidComponent<CommentProps> = (props) => {
         <Show when={canModify()}>
           <span class="mod-options">
             <button
+              type="button"
               onClick={doDelete}
               class="ion-trash-a"
               style={{

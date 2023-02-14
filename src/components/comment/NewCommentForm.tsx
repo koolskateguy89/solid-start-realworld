@@ -54,7 +54,7 @@ const NewCommentForm: VoidComponent = () => {
     >
       {(user) => (
         <>
-          <ErrorsList errors={posting.error && posting.error} />
+          <ErrorsList errors={posting.error} />
 
           <Form class="card comment-form">
             <input type="hidden" name="slug" value={params.slug} />
