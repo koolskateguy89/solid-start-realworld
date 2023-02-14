@@ -1,12 +1,10 @@
 import jwt from "jsonwebtoken";
 
-import type { Profile } from "~/types/api";
+import { type SessionProfile, sessionProfileSchema } from "./auth";
 import { serverEnv } from "~/env/server";
 
-export type SessionUser = Omit<Profile, "following">;
-
-export type Session = {
-  user: SessionUser;
+export type TokenSession = {
+  user: SessionProfile;
 };
 
 /*
@@ -30,7 +28,7 @@ auth strategy:
  * @param user
  * @returns JWT authentication token
  */
-export function generateToken<TUser extends SessionUser>(user: TUser): string {
+export function generateToken(user: SessionProfile): string {
   return jwt.sign(
     {
       user: {
@@ -38,7 +36,7 @@ export function generateToken<TUser extends SessionUser>(user: TUser): string {
         image: user.image,
         bio: user.bio,
       },
-    } satisfies Session,
+    } satisfies TokenSession,
     serverEnv.TOKEN_SECRET,
     { expiresIn: "7d" }
   );
@@ -53,7 +51,7 @@ export function getToken(request: Request): string | null {
  *
  * @returns The session contained in the token payload, or `null` if the token is invalid/missing
  */
-export function getSession(request: Request): Session | null {
+export function getSession(request: Request): TokenSession | null {
   const token = getToken(request);
   if (!token) return null;
 
@@ -65,8 +63,10 @@ export function getSession(request: Request): Session | null {
 
     if (!decoded) return null;
 
+    const user = sessionProfileSchema.parse(decoded.user);
+
     return {
-      user: decoded.user as SessionUser,
+      user,
     };
   } catch (err) {
     return null;
