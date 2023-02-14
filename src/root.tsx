@@ -13,6 +13,7 @@ import {
   Link,
 } from "solid-start";
 
+import { SessionProvider } from "~/lib/session";
 import Footer from "~/components/common/Footer";
 import Header from "~/components/common/Header";
 
@@ -42,11 +43,13 @@ export default function Root() {
       <Body>
         <Suspense>
           <ErrorBoundary>
-            <Header />
-            <Routes>
-              <FileRoutes />
-            </Routes>
-            <Footer />
+            <SessionProvider>
+              <Header />
+              <Routes>
+                <FileRoutes />
+              </Routes>
+              <Footer />
+            </SessionProvider>
           </ErrorBoundary>
         </Suspense>
         <Scripts />
