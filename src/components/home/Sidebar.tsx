@@ -1,15 +1,14 @@
 import { type VoidComponent, Suspense, For } from "solid-js";
-import { A } from "solid-start";
-import { createServerData$ } from "solid-start/server";
+import { createRouteData, A } from "solid-start";
 
 import type { ListOfTags } from "~/types/api";
 
 const Sidebar: VoidComponent = () => {
-  const tags = createServerData$(async (_, { fetch }) => {
+  const tags = createRouteData(async (_, { fetch }) => {
     const res = await fetch("/api/tags", {});
-    const data = (await res.json()) as ListOfTags;
 
-    return data.tags.concat("lol");
+    const { tags } = (await res.json()) as ListOfTags;
+    return tags;
   });
 
   return (
