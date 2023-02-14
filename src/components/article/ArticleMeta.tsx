@@ -9,7 +9,9 @@ import FavoriteButton, {
   type FavoriteButtonProps,
 } from "~/components/common/FavoriteButton";
 
-// FIXME: some weird bug idk how to fix rn, just click and you'll see
+// Have to wrap content in span because otherwise we'll have this weird bug
+// (try changing it to a fragment, then open an article page straight, then
+// click the favorite button, you'll see the bug)
 const MetaFavoriteButton: VoidComponent<
   Omit<FavoriteButtonProps, "invalidate">
 > = (props) => (
@@ -19,7 +21,7 @@ const MetaFavoriteButton: VoidComponent<
     {...props}
   >
     {({ favoriting, lookFavorited, unfavoriting, lookUnfavorited }) => (
-      <>
+      <span>
         <i class="ion-heart" />
         &nbsp;{" "}
         <Switch>
@@ -35,7 +37,7 @@ const MetaFavoriteButton: VoidComponent<
           </Switch>
           )
         </span>
-      </>
+      </span>
     )}
   </FavoriteButton>
 );
