@@ -60,7 +60,7 @@ export async function GET({ request }: APIEvent) {
   }
 
   const queryParams = isValid.data;
-  console.log("GET /api/articles queryParams=", queryParams);
+  console.log("GET /api/articles queryParams =", queryParams);
 
   const user = await getUser(request);
   const username = user?.username ?? "";

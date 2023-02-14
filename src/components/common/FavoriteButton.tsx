@@ -40,18 +40,7 @@ const FavoriteButton: FlowComponent<
     invalidate: () => props.invalidate,
   });
 
-  // for some reason returns false even if user is logged in
-  // unless calling it before handleClick is called
-  // I think it's because it hasn't queried the server for the session yet
-  // TODO: try and find workaround/fix
-  // this isn't a problem when using context for session
-  // isLoggedIn();
-
   const handleClick = async () => {
-    console.log("session", session());
-    console.log("session.user", session()?.user);
-    console.log("isLoggedIn =", isLoggedIn());
-
     if (!isLoggedIn()) return navigate("/login");
 
     await (props.favorited ? unfavorite(props.slug) : favorite(props.slug));

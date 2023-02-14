@@ -8,8 +8,7 @@ import { serverEnv } from "~/env/server";
 
 const storage = createCookieSessionStorage({
   cookie: {
-    // TODO: change name of cookie
-    name: "RJ_session",
+    name: "RealWorld_session",
     // secure doesn't work on localhost for Safari
     // https://web.dev/when-to-use-local-https/
     secure: process.env.NODE_ENV === "production",
@@ -60,18 +59,14 @@ export async function getUserProfile(request: Request) {
  * @note only use server-side on pages
  * @see `src/server/lib/auth.ts` for API route version
  */
-export async function requireUser(
-  request: Request,
-  redirectTo: string = new URL(request.url).pathname
-) {
+export async function requireUser(request: Request) {
   const session = await getUserSession(request);
   const userProfile = session.get("userProfile");
 
   const result = sessionProfileSchema.safeParse(userProfile);
 
   if (!result.success) {
-    const searchParams = new URLSearchParams({ redirectTo });
-    throw redirect(`/login?${searchParams}`);
+    throw redirect("/login");
   }
 
   return result.data;

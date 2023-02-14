@@ -11,10 +11,6 @@ import type { User } from "~/types/api";
 import type { LoginBody, LoginError } from "~/routes/api/users/login";
 import ErrorsList from "~/components/user/ErrorsList";
 
-// TODO: properly show LoginError
-
-// TODO?: handle redirectTo query param (see lib/session.server.ts)
-
 export function routeData() {
   // FIXME: this is not working, idk why
   // if signed in, redirect to home page

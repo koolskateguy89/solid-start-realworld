@@ -55,8 +55,6 @@ export async function POST({ request }: APIEvent) {
 
   const { user: data } = isValid.data;
 
-  console.log("data =", data);
-
   // Only check if username is taken if it's changed
   if (data.username && data.username !== userProfile.username) {
     const usernameTaken =

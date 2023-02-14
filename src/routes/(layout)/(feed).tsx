@@ -24,7 +24,7 @@ import Sidebar from "~/components/home/Sidebar";
 
 type Feed = "global" | "your";
 
-// TODO: pagination
+// TODO: pagination, could use query param
 
 export function routeData({ location }: RouteDataArgs) {
   return createServerData$(

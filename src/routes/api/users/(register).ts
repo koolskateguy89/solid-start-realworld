@@ -15,6 +15,7 @@ const registrationSchema = z.object({
   user: z.object({
     username: z.string().min(1),
     email: z.string().email(),
+    // TODO: enforce password min length
     password: z.string().min(1),
   }),
 });
