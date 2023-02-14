@@ -8,18 +8,17 @@ import {
 } from "solid-js";
 import {
   type RouteDataArgs,
-  createRouteData,
   useRouteData,
   useSearchParams,
   useLocation,
   Title,
   A,
 } from "solid-start";
+import { createServerData$, redirect } from "solid-start/server";
 
 import type { MultipleArticles } from "~/types/api";
 import { useSession } from "~/lib/session";
 import Banner from "~/components/home/Banner";
-import ArticlePreviews from "~/components/article/ArticlePreviews";
 import ArticlePreview from "~/components/article/ArticlePreview";
 import Sidebar from "~/components/home/Sidebar";
 
@@ -27,9 +26,9 @@ type Feed = "global" | "your";
 
 // TODO: pagination
 
-export function routeData({ location, navigate }: RouteDataArgs) {
-  return createRouteData(
-    async ([hash, tag, navigate], { fetch }) => {
+export function routeData({ location }: RouteDataArgs) {
+  return createServerData$(
+    async ([hash, tag], { fetch, request }) => {
       const feed = hash.substring(1) as Feed;
 
       console.log("routeData.feed = ", feed);
@@ -42,10 +41,12 @@ export function routeData({ location, navigate }: RouteDataArgs) {
       } else if (feed === "your") {
         url = "/api/articles/feed";
       } else {
-        throw navigate("/");
+        throw redirect("/");
       }
 
-      const res = await fetch(url, {});
+      const res = await fetch(url, {
+        headers: request.headers,
+      });
       const multipleArticles = (await res.json()) as MultipleArticles;
 
       return multipleArticles.articles;
@@ -55,7 +56,6 @@ export function routeData({ location, navigate }: RouteDataArgs) {
         [
           (location.hash || "#global") as `#${Feed}`,
           location.query.tag,
-          navigate,
         ] as const,
     }
   );
@@ -72,6 +72,8 @@ const HomePage: VoidComponent = () => {
 
   const location = useLocation();
   const [feed, setFeed] = createSignal<Feed>("global");
+
+  const invalidationKey = () => [location.hash || "#global", tag()];
 
   // can't derive feed from location.hash because hash isn't
   // set on initial render
@@ -126,11 +128,11 @@ const HomePage: VoidComponent = () => {
             </div>
 
             <Suspense fallback="Loading articles...">
-              <ArticlePreviews articles={articles() ?? []} />
-              {/* TODO: decide which to use depending on having to pass key to ArticlePreview */}
-              {/* <For each={articles() ?? []} fallback="Nothing to see here...">
-                {(article) => <ArticlePreview {...article} />}
-              </For> */}
+              <For each={articles()} fallback="Nothing to see here...">
+                {(article) => (
+                  <ArticlePreview {...article} invalidate={invalidationKey()} />
+                )}
+              </For>
             </Suspense>
           </div>
 

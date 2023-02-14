@@ -7,7 +7,6 @@ import FavoriteButton, {
   type FavoriteButtonProps,
 } from "~/components/common/FavoriteButton";
 
-// TODO: pass invalidate prop to ArticlePreview to pass to this
 // Have to wrap content in span because otherwise we'll have this weird bug
 // (try changing it to a fragment, then open a page this is on straight, then
 // click this button, you'll see the bug)
@@ -25,7 +24,8 @@ const PreviewFavoriteButton: VoidComponent<FavoriteButtonProps> = (props) => (
   </FavoriteButton>
 );
 
-export type ArticlePreviewProps = Article;
+export type ArticlePreviewProps = Article &
+  Pick<FavoriteButtonProps, "invalidate">;
 
 const ArticlePreview: VoidComponent<ArticlePreviewProps> = (props) => {
   const createdAt = () => formattedDate(props.createdAt);
@@ -51,6 +51,7 @@ const ArticlePreview: VoidComponent<ArticlePreviewProps> = (props) => {
           slug={props.slug}
           favorited={props.favorited}
           favoritesCount={props.favoritesCount}
+          invalidate={props.invalidate}
         />
       </div>
 

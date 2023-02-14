@@ -1,8 +1,9 @@
-import { type VoidComponent, Show, Suspense } from "solid-js";
+import { type VoidComponent, Suspense, For } from "solid-js";
 import {
   type RouteDataArgs,
   redirect,
   useRouteData,
+  useParams,
   Title,
   A,
 } from "solid-start";
@@ -10,7 +11,7 @@ import { createServerData$ } from "solid-start/server";
 
 import type { routeData as profileRouteData } from "../[username]";
 import type { MultipleArticles } from "~/types/api";
-import ArticlePreviews from "~/components/article/ArticlePreviews";
+import ArticlePreview from "~/components/article/ArticlePreview";
 import UserInfo from "~/components/profile/UserInfo";
 
 export function routeData({
@@ -43,6 +44,8 @@ export function routeData({
 const ProfilePage: VoidComponent = () => {
   const { profile, articles } = useRouteData<typeof routeData>();
 
+  const params = useParams<{ username: string }>();
+
   return (
     <main class="profile-page">
       <Title>{profile()?.username ?? "Profile"} — Conduit</Title>
@@ -66,12 +69,14 @@ const ProfilePage: VoidComponent = () => {
             </div>
 
             <Suspense fallback="Loading articles...">
-              <Show
-                when={(articles() ?? []).length > 0}
-                fallback="No articles are here... yet."
-              >
-                <ArticlePreviews articles={articles()!} />
-              </Show>
+              <For each={articles()} fallback="Nothing to see here...">
+                {(article) => (
+                  <ArticlePreview
+                    {...article}
+                    invalidate={["articles", params.username]}
+                  />
+                )}
+              </For>
             </Suspense>
           </div>
         </div>

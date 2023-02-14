@@ -13,7 +13,7 @@ export type FavoriteButtonProps = Pick<
   Article,
   "slug" | "favorited" | "favoritesCount"
 > & {
-  invalidate?: InvalidateFnResult;
+  invalidate: InvalidateFnResult;
   class?: string;
 };
 
@@ -44,7 +44,8 @@ const FavoriteButton: FlowComponent<
   // unless calling it before handleClick is called
   // I think it's because it hasn't queried the server for the session yet
   // TODO: try and find workaround/fix
-  isLoggedIn();
+  // this isn't a problem when using context for session
+  // isLoggedIn();
 
   const handleClick = async () => {
     console.log("session", session());
