@@ -47,9 +47,9 @@ export function routeData({ location }: RouteDataArgs) {
       const res = await fetch(url, {
         headers: request.headers,
       });
-      const multipleArticles = (await res.json()) as MultipleArticles;
 
-      return multipleArticles.articles;
+      const { articles } = (await res.json()) as MultipleArticles;
+      return articles;
     },
     {
       key: () =>

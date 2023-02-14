@@ -41,9 +41,8 @@ export function routeData({ params }: RouteDataArgs) {
         throw redirect("/");
       }
 
-      const result = (await res.json()) as MultipleComments;
-
-      return result.comments;
+      const { comments } = (await res.json()) as MultipleComments;
+      return comments;
     },
     {
       key: () => ["comments", params.slug],
@@ -108,7 +107,7 @@ const ArticlePage: VoidComponent = () => {
                 <div class="col-xs-12 col-md-8 offset-md-2">
                   <NewCommentForm />
 
-                  <For each={comments() ?? []}>
+                  <For each={comments()}>
                     {(comment) => <Comment {...comment} />}
                   </For>
                 </div>
