@@ -14,8 +14,6 @@ import {
 } from "solid-start";
 
 import { SessionProvider } from "~/lib/session";
-import Footer from "~/components/common/Footer";
-import Header from "~/components/common/Header";
 
 // https://realworld-docs.netlify.app/docs/specs/frontend-specs/styles
 
@@ -44,11 +42,9 @@ export default function Root() {
         <Suspense>
           <ErrorBoundary>
             <SessionProvider>
-              <Header />
               <Routes>
                 <FileRoutes />
               </Routes>
-              <Footer />
             </SessionProvider>
           </ErrorBoundary>
         </Suspense>
