@@ -20,29 +20,41 @@ import type { MultipleArticles } from "~/types/api";
 import { useSession } from "~/lib/session";
 import Banner from "~/components/home/Banner";
 import ArticlePreview from "~/components/article/ArticlePreview";
+import Pagination from "~/components/home/Pagination";
 import Sidebar from "~/components/home/Sidebar";
 
 type Feed = "global" | "your";
 
-// TODO: pagination, could use query param
-
 export function routeData({ location }: RouteDataArgs) {
   return createServerData$(
-    async ([hash, tag], { fetch, request }) => {
+    async ([hash, tag, page], { fetch, request }) => {
+      const searchParams = new URLSearchParams();
+
       const feed = hash.substring(1) as Feed;
 
-      console.log("routeData.feed = ", feed);
+      console.log("routeData.feed =", feed);
 
       let url: string;
       if (feed === "global") {
-        url = tag
-          ? `/api/articles?tag=${encodeURIComponent(tag)}`
-          : "/api/articles";
+        if (tag) searchParams.set("tag", tag);
+
+        url = "/api/articles";
       } else if (feed === "your") {
         url = "/api/articles/feed";
       } else {
         throw redirect("/");
       }
+
+      if (page) {
+        let pageNum = parseInt(page) || 1;
+        if (pageNum < 1) pageNum = 1;
+
+        const offset = (pageNum - 1) * 20;
+
+        searchParams.set("offset", offset.toString());
+      }
+
+      url += `?${searchParams}`;
 
       const res = await fetch(url, {
         headers: request.headers,
@@ -56,6 +68,7 @@ export function routeData({ location }: RouteDataArgs) {
         [
           (location.hash || "#global") as `#${Feed}`,
           location.query.tag,
+          location.query.page,
         ] as const,
     }
   );
@@ -65,7 +78,7 @@ const HomePage: VoidComponent = () => {
   const articles = useRouteData<typeof routeData>();
 
   const session = useSession();
-  const user = () => session()?.user;
+  const isLoggedIn = () => Boolean(session()?.user);
 
   const [searchParams] = useSearchParams<{ tag?: string }>();
   const tag = () => searchParams.tag;
@@ -91,7 +104,7 @@ const HomePage: VoidComponent = () => {
           <div class="col-md-9">
             <div class="feed-toggle">
               <ul class="nav nav-pills outline-active">
-                <Show when={user()}>
+                <Show when={isLoggedIn()}>
                   <li class="nav-item">
                     <A
                       href="/#your"
@@ -133,6 +146,9 @@ const HomePage: VoidComponent = () => {
                   <ArticlePreview {...article} invalidate={invalidationKey()} />
                 )}
               </For>
+
+              {/* TODO: get totalPages from API somehow */}
+              <Pagination totalPages={20} />
             </Suspense>
           </div>
 
