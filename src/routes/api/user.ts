@@ -70,12 +70,8 @@ export async function POST({ request }: APIEvent) {
       return json<UpdateUserError>({ errors: "NAME_TAKEN" }, 422);
   }
 
-  // TODO!: store email in session
-  // const email = "test";
-  const email = data.email;
-
   // Only check if email is taken if it's changed
-  if (data.email && data.email !== email /*userProfile.email*/) {
+  if (data.email && data.email !== userProfile.email) {
     const emailTaken =
       (await prisma.user.count({
         where: {
