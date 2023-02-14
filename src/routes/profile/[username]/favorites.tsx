@@ -1,12 +1,12 @@
 import { type VoidComponent, Show, Suspense } from "solid-js";
 import {
   type RouteDataArgs,
-  createRouteData,
   redirect,
   useRouteData,
   Title,
   A,
 } from "solid-start";
+import { createServerData$ } from "solid-start/server";
 
 import type { routeData as profileRouteData } from "../[username]";
 import type { MultipleArticles } from "~/types/api";
@@ -17,11 +17,11 @@ export function routeData({
   params,
   data: { profile },
 }: RouteDataArgs<typeof profileRouteData>) {
-  const articles = createRouteData(
-    async ([, username], { fetch }) => {
+  const articles = createServerData$(
+    async ([, username], { fetch, request }) => {
       const res = await fetch(
         `/api/articles?favorited=${encodeURIComponent(username)}`,
-        {}
+        { headers: request.headers }
       );
 
       if (!res.ok) throw redirect("/");
