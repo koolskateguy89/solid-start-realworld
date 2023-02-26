@@ -34,6 +34,9 @@ export type Article = {
 
 export type MultipleArticles = {
   articles: Article[];
+  /**
+   * The total number of articles
+   */
   articlesCount: number;
 };
 

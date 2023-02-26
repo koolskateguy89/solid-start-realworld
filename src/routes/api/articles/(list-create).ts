@@ -65,22 +65,31 @@ export async function GET({ request }: APIEvent) {
   const user = await getUser(request);
   const username = user?.username ?? "";
 
-  const articles = await prisma.article.findMany({
+  const where = toArticleWhereInput(queryParams);
+
+  const articlesData = prisma.article.findMany({
+    where,
     orderBy: {
       // most recent articles first
       createdAt: "desc",
     },
     skip: queryParams.offset,
     take: queryParams.limit,
-    where: {
-      ...toArticleWhereInput(queryParams),
-    },
     select: selectDbArticle(username),
   });
 
+  const articlesCountData = prisma.article.count({
+    where,
+  });
+
+  const [articles, articlesCount] = await Promise.all([
+    articlesData,
+    articlesCountData,
+  ]);
+
   return json<MultipleArticles>({
     articles: articles.map(toApiArticle),
-    articlesCount: articles.length,
+    articlesCount,
   });
 }
 

@@ -1,4 +1,5 @@
 import { type APIEvent, json } from "solid-start";
+import type { Prisma } from "@prisma/client";
 import { z } from "zod";
 
 import { requireUser } from "~/server/lib/auth";
@@ -36,16 +37,18 @@ export async function GET({ request }: APIEvent) {
 
   const queryParams = isValid.data;
 
-  const articles = await prisma.article.findMany({
-    where: {
-      author: {
-        followers: {
-          some: {
-            username: user.username,
-          },
+  const where: Prisma.ArticleWhereInput = {
+    author: {
+      followers: {
+        some: {
+          username: user.username,
         },
       },
     },
+  };
+
+  const articlesData = prisma.article.findMany({
+    where,
     orderBy: {
       // most recent articles first
       createdAt: "desc",
@@ -55,8 +58,17 @@ export async function GET({ request }: APIEvent) {
     select: selectDbArticle(user.username),
   });
 
+  const articlesCountData = prisma.article.count({
+    where,
+  });
+
+  const [articles, articlesCount] = await Promise.all([
+    articlesData,
+    articlesCountData,
+  ]);
+
   return json<MultipleArticles>({
     articles: articles.map(toApiArticle),
-    articlesCount: 0,
+    articlesCount,
   });
 }
