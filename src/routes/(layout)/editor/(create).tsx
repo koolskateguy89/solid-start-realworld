@@ -15,15 +15,15 @@ export function routeData() {
 const CreateArticlePage: VoidComponent = () => {
   const [creating, { Form }] = createRouteAction(
     async (formData: FormData, { fetch }) => {
-      // TODO: POST formData to /api/articles - basically done apart from
-      // handling tagList
-
       const body: CreateArticleBody = {
         article: {
           title: formData.get("title") as string,
           description: formData.get("description") as string,
           body: formData.get("body") as string,
-          tagList: (formData.get("tagList") as string).split(","),
+          tagList: (formData.get("tagList") as string)
+            .split(",")
+            .map((tag) => tag.trim())
+            .filter(Boolean),
         },
       };
 
@@ -37,8 +37,6 @@ const CreateArticlePage: VoidComponent = () => {
       return redirect(`/article/${encodeURIComponent(article.slug)}`);
     }
   );
-
-  // TODO?: tags comma delimited?, or space delimited
 
   return (
     <div class="editor-page">
@@ -79,7 +77,7 @@ const CreateArticlePage: VoidComponent = () => {
                   <input
                     name="tagList"
                     type="text"
-                    placeholder="Enter tags"
+                    placeholder="Enter tags (comma delimited)"
                     class="form-control"
                     required
                   />
