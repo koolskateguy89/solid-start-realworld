@@ -96,6 +96,7 @@ const EditArticlePage: VoidComponent = () => {
                           name="title"
                           placeholder="Article Title"
                           value={article.title}
+                          pattern="[a-zA-Z0-9 ]+" // only allow alphanumeric characters and spaces
                           class="form-control form-control-lg"
                           required
                         />

@@ -96,8 +96,11 @@ export async function GET({ request }: APIEvent) {
 // https://realworld-docs.netlify.app/docs/specs/backend-specs/endpoints#create-article
 const createArticleSchema = z.object({
   article: z.object({
-    // TODO: enforce title only a-zA-Z
-    title: z.string().trim().min(1),
+    title: z
+      .string()
+      .trim()
+      .min(1)
+      .regex(/^[a-zA-Z0-9 ]+$/), // only allow alphanumeric characters and spaces
     description: z.string().trim().min(1),
     body: z.string().trim().min(1),
     tagList: z.array(z.string().trim().min(1)).optional(),

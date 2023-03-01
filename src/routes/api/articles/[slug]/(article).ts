@@ -31,8 +31,12 @@ export async function GET({ params, request }: APIEvent) {
 // https://realworld-docs.netlify.app/docs/specs/backend-specs/endpoints#update-article
 const updateArticleSchema = z.object({
   article: z.object({
-    // TODO: enforce title only a-zA-Z
-    title: z.string().trim().min(1).optional(),
+    title: z
+      .string()
+      .trim()
+      .min(1)
+      .regex(/^[a-zA-Z0-9 ]+$/) // only allow alphanumeric characters and spaces
+      .optional(),
     description: z.string().trim().min(1).optional(),
     body: z.string().trim().min(1).optional(),
   }),
