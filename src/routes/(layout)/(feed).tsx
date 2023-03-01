@@ -25,6 +25,9 @@ import Sidebar from "~/components/home/Sidebar";
 
 type Feed = "global" | "your";
 
+// FIXME: opening /#your shows global feed :/
+// in routeData, location.hash is empty even tho it's not empty
+
 export function routeData({ location }: RouteDataArgs) {
   return createServerData$(
     async ([hash, tag, page], { fetch, request }) => {
@@ -60,8 +63,7 @@ export function routeData({ location }: RouteDataArgs) {
         headers: request.headers,
       });
 
-      const { articles } = (await res.json()) as MultipleArticles;
-      return articles;
+      return (await res.json()) as MultipleArticles;
     },
     {
       key: () =>
@@ -75,7 +77,7 @@ export function routeData({ location }: RouteDataArgs) {
 }
 
 const HomePage: VoidComponent = () => {
-  const articles = useRouteData<typeof routeData>();
+  const articlesData = useRouteData<typeof routeData>();
 
   const session = useSession();
   const isLoggedIn = () => Boolean(session()?.user);
@@ -141,14 +143,20 @@ const HomePage: VoidComponent = () => {
             </div>
 
             <Suspense fallback="Loading articles...">
-              <For each={articles()} fallback="Nothing to see here...">
+              <For
+                each={articlesData()?.articles}
+                fallback="Nothing to see here..."
+              >
                 {(article) => (
                   <ArticlePreview {...article} invalidate={invalidationKey()} />
                 )}
               </For>
 
-              {/* TODO: get totalPages from API somehow */}
-              <Pagination totalPages={20} />
+              <Pagination
+                totalPages={Math.ceil(
+                  (articlesData()?.articlesCount ?? 1) / 20
+                )}
+              />
             </Suspense>
           </div>
 
