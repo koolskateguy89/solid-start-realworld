@@ -13,8 +13,6 @@ import {
   Link,
 } from "solid-start";
 
-import { SessionProvider } from "~/lib/session";
-
 // https://realworld-docs.netlify.app/docs/specs/frontend-specs/styles
 
 export default function Root() {
@@ -41,11 +39,9 @@ export default function Root() {
       <Body>
         <Suspense>
           <ErrorBoundary>
-            <SessionProvider>
-              <Routes>
-                <FileRoutes />
-              </Routes>
-            </SessionProvider>
+            <Routes>
+              <FileRoutes />
+            </Routes>
           </ErrorBoundary>
         </Suspense>
         <Scripts />
