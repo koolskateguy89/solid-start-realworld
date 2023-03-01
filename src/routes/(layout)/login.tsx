@@ -12,11 +12,9 @@ import type { LoginBody, LoginError } from "~/routes/api/users/login";
 import ErrorsList from "~/components/user/ErrorsList";
 
 export function routeData() {
-  // FIXME: this is not working, idk why
   // if signed in, redirect to home page
-  return createServerData$(async (_, { request }) => {
+  createServerData$(async (_, { request }) => {
     const user = await getUserProfile(request);
-    // FIXME: it throws the redirect, but it doesn't actually redirect
     if (user) throw redirect("/");
   });
 }
