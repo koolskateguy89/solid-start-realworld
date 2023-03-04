@@ -36,6 +36,7 @@
     "bcryptjs": "^2.4.3",
     "jsonwebtoken": "^9.0.0",
     "solid-js": "^1.6.11",
+    "solid-markdown": "^1.2.0",
     "solid-start": "^0.2.22",
     "undici": "^5.20.0",
     "zod": "^3.20.6"
