@@ -1,4 +1,4 @@
-import { type VoidComponent, Show } from "solid-js";
+import { type VoidComponent, Show, createEffect } from "solid-js";
 import { createRouteAction, useParams, A } from "solid-start";
 
 import type { CreateCommentBody } from "~/routes/api/articles/[slug]/comments/(comment)";
@@ -32,14 +32,20 @@ const NewCommentForm: VoidComponent = () => {
 
       if (!res.ok) throw ["Invalid comment"];
 
-      // TODO: clear form on success, idk how tho
-
       return (await res.json()) as Comment;
     },
     {
       invalidate: ["comments", params.slug],
     }
   );
+
+  let formElem: HTMLFormElement;
+  createEffect(() => {
+    // clear form on success
+    if (posting.result) {
+      formElem.reset();
+    }
+  });
 
   return (
     <Show
@@ -56,7 +62,7 @@ const NewCommentForm: VoidComponent = () => {
         <>
           <ErrorsList errors={posting.error} />
 
-          <Form class="card comment-form">
+          <Form ref={formElem} class="card comment-form">
             <input type="hidden" name="slug" value={params.slug} />
             <div class="card-block">
               <textarea
