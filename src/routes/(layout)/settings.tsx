@@ -1,10 +1,6 @@
 import { type VoidComponent, Suspense } from "solid-js";
 import { useRouteData, Title } from "solid-start";
-import {
-  createServerAction$,
-  createServerData$,
-  redirect,
-} from "solid-start/server";
+import { createServerAction$, createServerData$ } from "solid-start/server";
 
 import type { User } from "~/types/api";
 import type { UpdateUserBody, UpdateUserError } from "~/routes/api/user";
@@ -15,7 +11,7 @@ export function routeData() {
   return createServerData$(async (_, { fetch, request }) => {
     const res = await fetch("api/user", {
       headers: request.headers,
-    }).catch(() => redirect("/login"));
+    });
 
     if (!res.ok) throw res;
 

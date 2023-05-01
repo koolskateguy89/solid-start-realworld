@@ -1,16 +1,9 @@
 import { type VoidComponent } from "solid-js";
 import { createRouteAction, Title } from "solid-start";
-import { createServerData$, redirect } from "solid-start/server";
+import { redirect } from "solid-start/server";
 
-import { requireUser } from "~/server/lib/session";
 import type { CreateArticleBody } from "~/routes/api/articles/(list-create)";
 import type { Article } from "~/types/api";
-
-export function routeData() {
-  return createServerData$(async (_, { request }) => {
-    await requireUser(request);
-  });
-}
 
 const CreateArticlePage: VoidComponent = () => {
   const [creating, { Form }] = createRouteAction(
@@ -33,7 +26,7 @@ const CreateArticlePage: VoidComponent = () => {
       });
 
       const article = (await res.json()) as Article;
-      // redirect to article page
+      // show article page once created
       return redirect(`/article/${encodeURIComponent(article.slug)}`);
     }
   );
