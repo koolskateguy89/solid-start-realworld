@@ -15,8 +15,8 @@
     "@types/bcryptjs": "^2.4.2",
     "@types/jsonwebtoken": "^9.0.2",
     "@types/node": "^18.16.3",
-    "@typescript-eslint/eslint-plugin": "^5.59.1",
-    "@typescript-eslint/parser": "^5.59.1",
+    "@typescript-eslint/eslint-plugin": "^5.59.2",
+    "@typescript-eslint/parser": "^5.59.2",
     "eslint": "^8.39.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-jsx-a11y": "^6.7.1",
@@ -27,16 +27,18 @@
     "solid-start-vercel": "^0.2.26",
     "ts-node": "^10.9.1",
     "typescript": "^5.0.4",
-    "vite": "^4.3.3"
+    "vite": "^4.3.4"
   },
   "dependencies": {
     "@prisma/client": "^4.13.0",
     "@solidjs/meta": "^0.28.4",
     "@solidjs/router": "^0.8.2",
     "bcryptjs": "^2.4.3",
+    "highlight.js": "^11.8.0",
     "jsonwebtoken": "^9.0.0",
-    "solid-js": "^1.7.3",
-    "solid-markdown": "1.2.0",
+    "solid-highlight": "^0.1.12",
+    "solid-js": "^1.7.4",
+    "solid-markdown": "^1.2.2",
     "solid-start": "^0.2.26",
     "undici": "^5.22.0",
     "zod": "^3.21.4"
