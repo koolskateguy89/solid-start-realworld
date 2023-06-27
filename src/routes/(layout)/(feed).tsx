@@ -35,7 +35,7 @@ export function routeData({ location }: RouteDataArgs) {
 
       const feed = hash.substring(1) as Feed;
 
-      console.log("routeData.feed =", feed);
+      console.log("(feed).routeData =", feed);
 
       let url: string;
       if (feed === "global") {
@@ -93,6 +93,8 @@ const HomePage: VoidComponent = () => {
   // can't derive feed from location.hash because hash isn't
   // set on initial render
   createEffect(() => {
+    console.log("location.hash =", location.hash);
+    // empty hash == global feed
     setFeed((location.hash.substring(1) || "global") as Feed);
   });
 
