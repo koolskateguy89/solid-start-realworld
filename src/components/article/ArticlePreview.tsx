@@ -7,19 +7,16 @@ import FavoriteButton, {
   type FavoriteButtonProps,
 } from "~/components/common/FavoriteButton";
 
-// Have to wrap content in span because otherwise we'll have this weird bug
-// (try changing it to a fragment, then open a page this is on straight, then
-// click this button, you'll see the bug)
 const PreviewFavoriteButton: VoidComponent<FavoriteButtonProps> = (props) => (
   <FavoriteButton class="btn btn-sm pull-xs-right" {...props}>
     {({ favoriting, unfavoriting }) => (
-      <span>
+      <>
         <i class="ion-heart" />{" "}
         <Switch fallback={`${props.favoritesCount}`}>
           <Match when={favoriting}>{props.favoritesCount + 1}</Match>
           <Match when={unfavoriting}>{props.favoritesCount - 1}</Match>
         </Switch>
-      </span>
+      </>
     )}
   </FavoriteButton>
 );

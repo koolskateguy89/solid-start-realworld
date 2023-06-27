@@ -1,4 +1,4 @@
-import type { JSX, FlowComponent } from "solid-js";
+import { type JSX, type FlowComponent, Suspense } from "solid-js";
 import { useNavigate } from "solid-start";
 
 import type { Article } from "~/types/api";
@@ -32,6 +32,10 @@ const FavoriteButton: FlowComponent<
 
   const session = useSession();
   const isLoggedIn = () => Boolean(session()?.user);
+  // Need to call it here because otherwise `session` will be in pending
+  // state when `handleClick` is called, which was causing the bug of the
+  // page reloading when clicking this button.
+  session();
 
   const [favoriting, favorite] = createFavoriteAction({
     invalidate: () => props.invalidate,
