@@ -33,6 +33,7 @@
     "@prisma/client": "^4.16.1",
     "@solidjs/meta": "^0.28.5",
     "@solidjs/router": "^0.8.2",
+    "@vercel/postgres": "^0.4.0",
     "bcryptjs": "^2.4.3",
     "highlight.js": "^11.8.0",
     "jsonwebtoken": "^9.0.0",

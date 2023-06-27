@@ -3,15 +3,14 @@
 
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["filteredRelationCount"]
+  previewFeatures = ["jsonProtocol"]
 }
 
 datasource db {
-  provider = "sqlite"
-  // NOTE: When using postgresql, mysql or sqlserver, uncomment the @db.Text annotations in model Account below
-  // Further reading:
-  // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
-  url      = env("DATABASE_URL")
+  provider          = "postgresql"
+  url               = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  directUrl         = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+  shadowDatabaseUrl = env("POSTGRES_URL_NON_POOLING") // used for migrations
 }
 
 model User {
@@ -31,7 +30,7 @@ model Article {
   slug           String    @id
   title          String
   description    String
-  body           String // @db.Text
+  body           String
   tagList        Tag[]
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
@@ -50,7 +49,7 @@ model Comment {
   id             Int      @id @default(autoincrement())
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
-  body           String // @db.Text
+  body           String
   authorUsername String
   articleSlug    String
   author         User     @relation(fields: [authorUsername], references: [username], onDelete: Cascade, onUpdate: Cascade)

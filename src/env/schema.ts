@@ -8,7 +8,8 @@ export const serverSchema = z.object({
     .string()
     .default("1")
     .transform((v) => parseInt(v)),
-  DATABASE_URL: z.string(),
+  POSTGRES_PRISMA_URL: z.string().url(),
+  POSTGRES_URL_NON_POOLING: z.string().url(),
 
   TOKEN_SECRET: z.string(),
   SESSION_SECRET: z.string(),
