@@ -134,11 +134,11 @@ const HomePage: VoidComponent = () => {
                     Global Feed
                   </A>
                 </li>
-                <Show when={tag()} keyed>
+                <Show when={tag()}>
                   {(tag) => (
                     <li class="nav-item">
                       <div class="nav-link active">
-                        <i class="ion-pound" /> {tag}
+                        <i class="ion-pound" /> {tag()}
                       </div>
                     </li>
                   )}

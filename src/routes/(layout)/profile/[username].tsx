@@ -34,12 +34,12 @@ const ProfilePageLayout: VoidComponent = () => {
   const profile = useRouteData<typeof routeData>();
 
   return (
-    <Show when={profile()} keyed>
+    <Show when={profile()}>
       {(profile) => (
         <main class="profile-page">
-          <Title>{profile.username} — Conduit</Title>
+          <Title>{profile().username} — Conduit</Title>
 
-          <UserInfo {...profile} />
+          <UserInfo {...profile()} />
 
           <div class="container">
             <div class="row">
@@ -48,7 +48,7 @@ const ProfilePageLayout: VoidComponent = () => {
                   <ul class="nav nav-pills outline-active">
                     <li class="nav-item">
                       <A
-                        href={`/profile/${profile.username}`}
+                        href={`/profile/${profile().username}`}
                         class="nav-link"
                         end
                       >
@@ -57,7 +57,7 @@ const ProfilePageLayout: VoidComponent = () => {
                     </li>
                     <li class="nav-item">
                       <A
-                        href={`/profile/${profile.username}/favorites`}
+                        href={`/profile/${profile().username}/favorites`}
                         class="nav-link"
                       >
                         Favorited Articles

@@ -41,11 +41,11 @@ const ArticlePage: VoidComponent = () => {
           </>
         }
       >
-        <Show when={article()} keyed>
+        <Show when={article()}>
           {(article) => (
             <>
-              <Title>{article.title} — Conduit</Title>
-              <ArticleBanner {...article} />
+              <Title>{article().title} — Conduit</Title>
+              <ArticleBanner {...article()} />
             </>
           )}
         </Show>
@@ -62,15 +62,15 @@ const ArticlePage: VoidComponent = () => {
             </>
           }
         >
-          <Show when={article()} keyed>
+          <Show when={article()}>
             {(article) => (
               <>
-                <ArticleContent>{article.body}</ArticleContent>
+                <ArticleContent>{article().body}</ArticleContent>
 
                 <hr />
 
                 <div class="article-actions">
-                  <ArticleMeta {...article} />
+                  <ArticleMeta {...article()} />
                 </div>
               </>
             )}

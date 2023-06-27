@@ -57,7 +57,6 @@ const NewCommentForm: VoidComponent = () => {
           comments on this article.
         </p>
       }
-      keyed
     >
       {(user) => (
         <>
@@ -76,8 +75,8 @@ const NewCommentForm: VoidComponent = () => {
             </div>
             <div class="card-footer">
               <img
-                src={user.image}
-                alt={user.username}
+                src={user().image}
+                alt={user().username}
                 class="comment-author-img"
               />
               <button

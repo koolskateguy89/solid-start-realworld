@@ -78,7 +78,7 @@ const EditArticlePage: VoidComponent = () => {
 
   return (
     <Suspense>
-      <Show when={article()} keyed>
+      <Show when={article()}>
         {(article) => (
           <div class="editor-page">
             <Title>Editor — Conduit</Title>
@@ -95,7 +95,7 @@ const EditArticlePage: VoidComponent = () => {
                           type="text"
                           name="title"
                           placeholder="Article Title"
-                          value={article.title}
+                          value={article().title}
                           pattern="[a-zA-Z0-9 ]+" // only allow alphanumeric characters and spaces
                           class="form-control form-control-lg"
                           required
@@ -106,7 +106,7 @@ const EditArticlePage: VoidComponent = () => {
                           type="text"
                           name="description"
                           placeholder="What's this article about?"
-                          value={article.description}
+                          value={article().description}
                           class="form-control"
                           required
                         />
@@ -116,7 +116,7 @@ const EditArticlePage: VoidComponent = () => {
                           name="body"
                           placeholder="Write your article (in markdown)"
                           rows="8"
-                          value={article.body}
+                          value={article().body}
                           class="form-control"
                           required
                         />
@@ -126,7 +126,7 @@ const EditArticlePage: VoidComponent = () => {
                           name="tagList"
                           type="text"
                           placeholder="Enter tags"
-                          value={article.tagList.join(",")}
+                          value={article().tagList.join(",")}
                           class="form-control"
                           readOnly
                         />

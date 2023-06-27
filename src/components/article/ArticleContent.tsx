@@ -45,9 +45,9 @@ const Code: Component<CodeComponentProps & { className: string }> = (
   const children = () => String(props.children).replace(/\n$/, "");
 
   return (
-    <Show when={!props.inline && match()} fallback={<code {...props} />} keyed>
+    <Show when={!props.inline && match()} fallback={<code {...props} />}>
       {(match) => (
-        <Highlight {...props} language={match[1]} autoDetect={false}>
+        <Highlight {...props} language={match()[1]} autoDetect={false}>
           {children()}
         </Highlight>
       )}

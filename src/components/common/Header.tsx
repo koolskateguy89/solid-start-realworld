@@ -35,7 +35,6 @@ const Header: VoidComponent = () => {
                 </li>
               </>
             }
-            keyed
           >
             {(user) => (
               <>
@@ -55,16 +54,16 @@ const Header: VoidComponent = () => {
                 </li>
                 <li class="nav-item">
                   <A
-                    href={`/profile/${encodeURIComponent(user.username)}`}
+                    href={`/profile/${encodeURIComponent(user().username)}`}
                     class="nav-link"
                     end
                   >
                     <img
-                      src={user.image}
-                      alt={user.username}
+                      src={user().image}
+                      alt={user().username}
                       class="user-pic"
                     />
-                    {user.username}
+                    {user().username}
                   </A>
                 </li>
               </>
