@@ -8,11 +8,8 @@ import type { ErrorResponse } from "~/types/api";
 // https://realworld-docs.netlify.app/docs/specs/backend-specs/endpoints#delete-comment
 const paramsSchema = z.object({
   slug: z.string(),
-  // https://github.com/colinhacks/zod/discussions/330#discussioncomment-1625947
-  id: z.preprocess(
-    (a) => parseInt(z.string().parse(a)),
-    z.number().int().min(0)
-  ),
+  // https://github.com/colinhacks/zod#coercion-for-primitives
+  id: z.number().or(z.string()).pipe(z.coerce.number().int().min(0)),
 });
 
 export async function DELETE({ params, request }: APIEvent) {

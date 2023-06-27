@@ -9,15 +9,9 @@ import type { ErrorResponse, MultipleArticles } from "~/types/api";
 
 // https://realworld-docs.netlify.app/docs/specs/backend-specs/endpoints#feed-articles
 const queryParamsSchema = z.object({
-  // https://github.com/colinhacks/zod/discussions/330#discussioncomment-1625947
-  limit: z.preprocess(
-    (a) => parseInt(z.string().optional().default("20").parse(a)),
-    z.number().int().min(0)
-  ),
-  offset: z.preprocess(
-    (a) => parseInt(z.string().optional().default("0").parse(a)),
-    z.number().int().min(0)
-  ),
+  // https://github.com/colinhacks/zod#coercion-for-primitives
+  limit: z.string().default("20").pipe(z.coerce.number().int().min(0)),
+  offset: z.string().default("0").pipe(z.coerce.number().int().min(0)),
 });
 
 export async function GET({ request }: APIEvent) {
