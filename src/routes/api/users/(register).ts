@@ -13,6 +13,7 @@ export type RegistrationError = {
 // https://realworld-docs.netlify.app/docs/specs/backend-specs/endpoints#registration
 const registrationSchema = z.object({
   user: z.object({
+    // TODO?: only allow alphanumeric characters in username, no space?
     username: z.string().min(1),
     email: z.string().email(),
     // TODO: enforce password min length
