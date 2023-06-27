@@ -5,6 +5,7 @@ import type { CreateCommentBody } from "~/routes/api/articles/[slug]/comments/(c
 import type { Comment } from "~/types/api";
 import { useSession } from "~/lib/session";
 import ErrorsList from "~/components/user/ErrorsList";
+import ImagePlaceholder from "~/components/common/ImagePlaceholder";
 
 const NewCommentForm: VoidComponent = () => {
   const session = useSession();
@@ -95,3 +96,23 @@ const NewCommentForm: VoidComponent = () => {
 };
 
 export default NewCommentForm;
+
+export const NewCommentFormSkeleton: VoidComponent = () => (
+  <form class="card comment-form">
+    <div class="card-block">
+      <textarea
+        name="body"
+        class="form-control"
+        placeholder="Loading comments..."
+        rows="3"
+        required
+      />
+    </div>
+    <div class="card-footer">
+      <ImagePlaceholder class="comment-author-img" />
+      <button type="submit" class="btn btn-sm btn-primary" disabled>
+        Post Comment
+      </button>
+    </div>
+  </form>
+);

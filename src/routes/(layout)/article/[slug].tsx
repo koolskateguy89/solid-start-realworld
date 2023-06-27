@@ -3,9 +3,16 @@ import { type RouteDataArgs, useRouteData, Title } from "solid-start";
 
 import { api } from "~/lib/api";
 import ArticleContent from "~/components/article/ArticleContent";
-import ArticleMeta from "~/components/article/ArticleMeta";
+import ArticleMeta, {
+  ArticleMetaSkeleton,
+} from "~/components/article/ArticleMeta";
 import Comment from "~/components/comment/Comment";
-import NewCommentForm from "~/components/comment/NewCommentForm";
+import NewCommentForm, {
+  NewCommentFormSkeleton,
+} from "~/components/comment/NewCommentForm";
+import ArticleBanner, {
+  ArticleBannerSkeleton,
+} from "~/components/article/ArticleBanner";
 
 export function routeData({ params }: RouteDataArgs) {
   const article = api.articles.getArticle(params.slug!);
@@ -25,42 +32,64 @@ const ArticlePage: VoidComponent = () => {
   const { article, comments } = useRouteData<typeof routeData>();
 
   return (
-    <Suspense>
-      <Show when={article()} keyed>
-        {(article) => (
-          <main class="article-page">
-            <Title>{article.title} — Conduit</Title>
+    <main class="article-page">
+      <Suspense
+        fallback={
+          <>
+            <Title>Conduit</Title>
+            <ArticleBannerSkeleton />
+          </>
+        }
+      >
+        <Show when={article()} keyed>
+          {(article) => (
+            <>
+              <Title>{article.title} — Conduit</Title>
+              <ArticleBanner {...article} />
+            </>
+          )}
+        </Show>
+      </Suspense>
 
-            <div class="banner">
-              <div class="container">
-                <h1>{article.title}</h1>
-                <ArticleMeta {...article} />
-              </div>
-            </div>
-
-            <div class="container page">
-              <ArticleContent>{article.body}</ArticleContent>
-
+      <div class="container page">
+        <Suspense
+          fallback={
+            <>
               <hr />
-
               <div class="article-actions">
-                <ArticleMeta {...article} />
+                <ArticleMetaSkeleton />
               </div>
+            </>
+          }
+        >
+          <Show when={article()} keyed>
+            {(article) => (
+              <>
+                <ArticleContent>{article.body}</ArticleContent>
 
-              <div class="row">
-                <div class="col-xs-12 col-md-8 offset-md-2">
-                  <NewCommentForm />
+                <hr />
 
-                  <For each={comments()}>
-                    {(comment) => <Comment {...comment} />}
-                  </For>
+                <div class="article-actions">
+                  <ArticleMeta {...article} />
                 </div>
-              </div>
-            </div>
-          </main>
-        )}
-      </Show>
-    </Suspense>
+              </>
+            )}
+          </Show>
+        </Suspense>
+
+        <div class="row">
+          <div class="col-xs-12 col-md-8 offset-md-2">
+            <Suspense fallback={<NewCommentFormSkeleton />}>
+              <NewCommentForm />
+
+              <For each={comments()}>
+                {(comment) => <Comment {...comment} />}
+              </For>
+            </Suspense>
+          </div>
+        </div>
+      </div>
+    </main>
   );
 };
 

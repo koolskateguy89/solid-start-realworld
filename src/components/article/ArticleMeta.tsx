@@ -8,6 +8,7 @@ import FollowButton from "~/components/common/FollowButton";
 import FavoriteButton, {
   type FavoriteButtonProps,
 } from "~/components/common/FavoriteButton";
+import ImagePlaceholder from "~/components/common/ImagePlaceholder";
 
 // Have to wrap content in span because otherwise we'll have this weird bug
 // (try changing it to a fragment, then open an article page straight, then
@@ -114,3 +115,15 @@ const ArticleMeta: VoidComponent<ArticleMetaProps> = (props) => {
 };
 
 export default ArticleMeta;
+
+export const ArticleMetaSkeleton: VoidComponent = () => (
+  <div class="article-meta">
+    <span>
+      <ImagePlaceholder />
+    </span>
+    <div class="info">
+      <span class="author">&nbsp;</span>
+      <span class="date">&nbsp;</span>
+    </div>
+  </div>
+);
