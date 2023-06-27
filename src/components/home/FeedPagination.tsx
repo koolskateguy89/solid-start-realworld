@@ -1,11 +1,11 @@
 import { type VoidComponent, For, Show } from "solid-js";
 import { useLocation, useSearchParams, A } from "solid-start";
 
-export type PaginationProps = {
+export type FeedPaginationProps = {
   totalPages: number;
 };
 
-const Pagination: VoidComponent<PaginationProps> = (props) => {
+const FeedPagination: VoidComponent<FeedPaginationProps> = (props) => {
   const location = useLocation();
 
   const [searchParams] = useSearchParams<{ page?: string }>();
@@ -63,4 +63,4 @@ const Pagination: VoidComponent<PaginationProps> = (props) => {
   );
 };
 
-export default Pagination;
+export default FeedPagination;

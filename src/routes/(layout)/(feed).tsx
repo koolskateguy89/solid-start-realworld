@@ -20,7 +20,7 @@ import type { MultipleArticles } from "~/types/api";
 import { useSession } from "~/lib/session";
 import Banner from "~/components/home/Banner";
 import ArticlePreview from "~/components/article/ArticlePreview";
-import Pagination from "~/components/home/Pagination";
+import FeedPagination from "~/components/home/FeedPagination";
 import Sidebar from "~/components/home/Sidebar";
 
 type Feed = "global" | "your";
@@ -134,12 +134,14 @@ const HomePage: VoidComponent = () => {
                     Global Feed
                   </A>
                 </li>
-                <Show when={tag()}>
-                  <li class="nav-item">
-                    <div class="nav-link active">
-                      <i class="ion-pound" /> {tag()}
-                    </div>
-                  </li>
+                <Show when={tag()} keyed>
+                  {(tag) => (
+                    <li class="nav-item">
+                      <div class="nav-link active">
+                        <i class="ion-pound" /> {tag}
+                      </div>
+                    </li>
+                  )}
                 </Show>
               </ul>
             </div>
@@ -154,9 +156,9 @@ const HomePage: VoidComponent = () => {
                 )}
               </For>
 
-              <Pagination
+              <FeedPagination
                 totalPages={Math.ceil(
-                  (articlesData()?.articlesCount ?? 1) / 20
+                  (articlesData()?.articlesCount ?? 0) / 20
                 )}
               />
             </Suspense>
